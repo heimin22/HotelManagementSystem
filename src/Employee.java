@@ -5,7 +5,7 @@ import java.sql.*;
 // main class
 public class Employee {
     // url or link for the database
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/HotelManagementDatabase";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/hotelReservationOfficial";
 
     // username (user) and password (master password) of the database
     private static final String DB_USERNAME = "postgres";
