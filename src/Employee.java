@@ -17,8 +17,9 @@ public class Employee {
     // main method
     public static void main(String[] args) {
         try {
+            Class.forName("org.postgresql.Driver");
             // establishing database connection
-            Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD    );
+            Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
             // prompt for the employee ID
             employeeID = promptForEmployeeId();
@@ -40,6 +41,8 @@ public class Employee {
         }
         catch (SQLException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
