@@ -48,14 +48,14 @@ public class Employee {
 
     private static int promptForEmployeeId() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Hello! Please log-is first." + "\nEnter Employee ID:");
+        System.out.print("Hello! Please log-is first." + "\nEnter Employee ID: ");
         employeeID = sc.nextInt();
         return employeeID;
     }
 
     private static boolean validateEmployeeId(Connection connection, int employeedID) throws SQLException {
         // prepare the SQL statement to validate the employee ID
-        String sql = "SELECT COUNT(*) FROM employees WHERE employee_id = ?";
+        String sql = "SELECT COUNT(*) FROM \"hotelReservationOfficial\".\"hotelSchema\".employees WHERE employeeid = ?";
 
         // create a prepared statement
         PreparedStatement statement =  connection.prepareStatement(sql);
