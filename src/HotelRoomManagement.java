@@ -23,12 +23,11 @@ public class HotelRoomManagement {
         this.connection = connection;
     }
     public static void main(String[] args) {
-
+        System.out.println("------ Hotel Room Management ------");
         boolean exit = false;
         while (!exit) {
             displayMenu();
             int choice = getUserChoice();
-
             switch (choice) {
                 case 1:
                     displayReservedRooms();
@@ -48,9 +47,16 @@ public class HotelRoomManagement {
                 case 6:
                     displayReservedRecords();
                     break;
+                case 7:
+                    sc.close();
+                    exit = true;
+                    System.out.println("Exiting Hotel Room Reservation Management...");
+                    break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
+                    break;
             }
+            exit = true;
         }
     }
 
@@ -69,33 +75,31 @@ public class HotelRoomManagement {
         System.out.print("Enter your choice: ");
         int choice = sc.nextInt();
         sc.nextLine();
+
         return choice;
     }
 
     private static void displayReservedRooms() {
-
+        System.out.println("------ Reserved Rooms ------");
     }
 
     private static void displayCustomerRecords() {
-
+        System.out.println("------ Customer Records ------");
     }
 
     private static void displayRooms() {
-
+        System.out.println("------ Rooms ------");
     }
-    private static void displayRoomServices() {
 
+    private static void displayRoomServices() {
+        System.out.println("------ Room Services ------");
     }
 
     private static void displayEmployeeList() {
-
+        System.out.println("------ Employees ------");
     }
 
     private static void displayReservedRecords() {
-
+        System.out.println("------ Reservation Records ------");
     }
-
-
-
-
 }
