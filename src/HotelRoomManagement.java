@@ -24,7 +24,6 @@ public class HotelRoomManagement {
     }
     public static void main(String[] args) {
 
-
         boolean exit = false;
         while (!exit) {
             displayMenu();
@@ -32,7 +31,25 @@ public class HotelRoomManagement {
 
             switch (choice) {
                 case 1:
-
+                    displayReservedRooms();
+                    break;
+                case 2:
+                    displayCustomerRecords();
+                    break;
+                case 3:
+                    displayRooms();
+                    break;
+                case 4:
+                    displayRoomServices();
+                    break;
+                case 5:
+                    displayEmployeeList();
+                    break;
+                case 6:
+                    displayReservedRecords();
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
             }
         }
     }
@@ -55,26 +72,26 @@ public class HotelRoomManagement {
         return choice;
     }
 
-    private void displayReservedRooms() {
+    private static void displayReservedRooms() {
 
     }
 
-    private void displayCustomerRecords() {
+    private static void displayCustomerRecords() {
 
     }
 
-    private void displayRooms() {
+    private static void displayRooms() {
 
     }
-    private void displayRoomServices() {
-
-    }
-
-    private void displayEmployeeList() {
+    private static void displayRoomServices() {
 
     }
 
-    private void displayReservedRecords() {
+    private static void displayEmployeeList() {
+
+    }
+
+    private static void displayReservedRecords() {
 
     }
 
