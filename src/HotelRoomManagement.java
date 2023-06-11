@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.sql.*;
 
@@ -8,8 +9,10 @@ public class HotelRoomManagement {
     private static final String TABLE_ROOM_MANAGEMENT = "room_management";
     private static final String TABLE_ROOM_SERVICES = "room_services";
     private static final String TABLE_USERS = "users";
-    private Connection connection;
+    private static Connection connection;
     private static Scanner sc = new Scanner(System.in);
+
+    private static int choice;
 
     // url or link for the database
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/hotelReservationOfficial";
@@ -22,42 +25,53 @@ public class HotelRoomManagement {
     public HotelRoomManagement(Connection connection) {
         this.connection = connection;
     }
+
     public static void main(String[] args) {
         System.out.println("------ Hotel Room Management ------");
         boolean exit = false;
-        while (!exit) {
-            displayMenu();
-            int choice = getUserChoice();
-            switch (choice) {
-                case 1:
-                    displayReservedRooms();
-                    break;
-                case 2:
-                    displayCustomerRecords();
-                    break;
-                case 3:
-                    displayRooms();
-                    break;
-                case 4:
-                    displayRoomServices();
-                    break;
-                case 5:
-                    displayEmployeeList();
-                    break;
-                case 6:
-                    displayReservedRecords();
-                    break;
-                case 7:
-                    sc.close();
-                    exit = true;
-                    System.out.println("Exiting Hotel Room Reservation Management...");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
+
+        do {
+            try {
+                displayMenu();
+                choice = getUserChoice();
+                switch (choice) {
+                    case 1:
+                        try {
+                            displayReservedRooms();
+                        }
+                        catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    case 2:
+                        displayCustomerRecords();
+                        break;
+                    case 3:
+                        displayRooms();
+                        break;
+                    case 4:
+                        displayRoomServices();
+                        break;
+                    case 5:
+                        displayEmployeeList();
+                        break;
+                    case 6:
+                        displayReservedRecords();
+                        break;
+                    case 7:
+                        sc.close();
+                        System.out.println("Exiting Hotel Room Reservation Management...");
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.\n");
+                        break;
+                }
             }
-            exit = true;
-        }
+            catch (InputMismatchException e) {
+                System.out.println("Wrong format entered. Please try again.\n");
+                sc.nextLine();
+            }
+        } while (choice < 1 || choice > 7);
     }
 
     private static void displayMenu() {
@@ -75,12 +89,24 @@ public class HotelRoomManagement {
         System.out.print("Enter your choice: ");
         int choice = sc.nextInt();
         sc.nextLine();
-
         return choice;
     }
 
-    private static void displayReservedRooms() {
+    private static void displayReservedRooms() throws SQLException {
         System.out.println("------ Reserved Rooms ------");
+
+        String sql = "SELECT * FROM reservations";
+
+        Statement statement = connection.createStatement();
+
+        ResultSet resultSet = statement.executeQuery(sql);
+
+
+        while (resultSet.next()) {
+            int reservationID = resultSet.getInt("reservationID");
+            int userID = resultSet.getInt("user_ID");
+
+        }
     }
 
     private static void displayCustomerRecords() {
