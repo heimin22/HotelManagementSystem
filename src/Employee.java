@@ -1,5 +1,6 @@
 // importing util package and sql package
-
+import java.util.InputMismatchException;
+import java.util.regex.*;
 import java.util.Scanner;
 import java.sql.*;
 
@@ -15,15 +16,26 @@ public class Employee {
     // the employee's id is their employeeid in the database table "employees" in column "employeeid"
     private static int employeeID;
 
+    private static String formattedID;
+
+
     // main method
     public static void main(String[] args) {
         try {
+            // using the jdbc for the database connection
             Class.forName("org.postgresql.Driver");
             // establishing database connection
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+
+            formattedID = formatPassword(employeeID);
+
+            // used for the while loops if the id is matched
             boolean matchedID = false;
+
+            // an object for accessing the hotel room management class
             HotelRoomManagement hotelRoomManagement = new HotelRoomManagement();
 
+            // while loop for the entering the employee ID
             while (!matchedID) {
                 // prompt for the employee ID
                 employeeID = promptForEmployeeId();
@@ -63,8 +75,8 @@ public class Employee {
             System.out.print("Hello! Please log-is first." + "\nEnter Employee ID: ");
             employeeID = sc.nextInt();
 
-        } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
+        } catch (InputMismatchException e) {
+            System.out.println("Please enter the correct format");
         }
         return employeeID;
     }
@@ -93,4 +105,34 @@ public class Employee {
 
         return isValidEmployee;
     }
+
+
+    // formatting the
+    private static String formatPassword(int employeeID) {
+        // defining the regex pattern for the employee ID. Example format is "123456" so 6 numbers are allowed
+        String regexPattern = "(\\d{6})";
+
+        // this will be the pattern object with the following regex pattern which is all numbers that occur 6 times
+        Pattern pattern = Pattern.compile(regexPattern);
+
+        // the value of isString is the converted String value of employeeID
+        String isString = String.valueOf(employeeID);
+
+        // match the ID against the pattern
+        Matcher matcher = pattern.matcher(isString);
+
+        // check if the id matches the following pattern
+        if (matcher.matches()) {
+            // if the following ID matches the pattern then the value of formatted ID is equals to the matched group
+            String formattedID = matcher.group(1);
+
+            // returning the formatted ID
+            return formattedID;
+        }
+        else {
+            // if the ID did not match the pattern then it will return the original id
+            return isString;
+        }
+    }
 }
+
