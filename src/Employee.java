@@ -49,7 +49,8 @@ public class Employee {
                     break;
                     // redirect to hotel room management and table viewing
 
-                } else {
+                }
+                else {
                     // invalid employee ID
                     System.out.println("Invalid employee ID. Please try again\n");
                 }
