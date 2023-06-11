@@ -70,13 +70,13 @@ public class Employee {
 
     // log-in method
     private static int promptForEmployeeId() throws SQLException {
+        // Scanner object
         Scanner sc = new Scanner(System.in);
-        boolean matchedID = false;
         try {
             System.out.print("Hello! Please log-is first." + "\nEnter Employee ID: ");
             employeeID = sc.nextInt();
-
-        } catch (InputMismatchException e) {
+        }
+        catch (InputMismatchException e) {
             System.out.println("Please enter the correct format");
         }
         return employeeID;
