@@ -20,24 +20,6 @@ public class Employee {
             Class.forName("org.postgresql.Driver");
             // establishing database connection
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-
-            // prompt for the employee ID
-            employeeID = promptForEmployeeId();
-
-            // validate employee ID
-            boolean isValidEmployee = validateEmployeeId(connection, employeeID);
-
-
-            if (isValidEmployee) {
-                // successful log-in
-                System.out.println("Log-in successful.");
-
-                // redirect to hotel room management and table viewing
-            }
-            else {
-                // invalid employee ID
-                System.out.println("Invalid employee ID. Please try again");
-            }
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -46,10 +28,31 @@ public class Employee {
         }
     }
 
-    private static int promptForEmployeeId() {
+    // log-in method
+    private static int promptForEmployeeId(Connection connection) throws SQLException {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Hello! Please log-is first." + "\nEnter Employee ID: ");
-        employeeID = sc.nextInt();
+        boolean matchedID = false, isValidEmployee = validateEmployeeId(connection, employeeID);
+
+        while (!matchedID) {
+            try {
+                System.out.print("Hello! Please log-is first." + "\nEnter Employee ID: ");
+                employeeID = sc.nextInt();
+
+                if (isValidEmployee) {
+                    // successful log-in
+                    System.out.println("Log-in successful.");
+
+                    // redirect to hotel room management and table viewing
+                }
+                else {
+                    // invalid employee ID
+                    System.out.println("Invalid employee ID. Please try again");
+                }
+            }
+            catch (NumberFormatException e) {
+                System.out.println(e.getMessage());
+            }
+        }
         return employeeID;
     }
 
