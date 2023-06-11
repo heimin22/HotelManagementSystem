@@ -33,7 +33,7 @@ public class Employee {
             boolean matchedID = false;
 
             // an object for accessing the hotel room management class
-            HotelRoomManagement hotelRoomManagement = new HotelRoomManagement();
+            HotelRoomManagement hotelRoomManagement = new HotelRoomManagement(connection);
 
             // while loop for the entering the employee ID
             while (!matchedID) {
