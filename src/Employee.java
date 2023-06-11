@@ -1,4 +1,5 @@
 // importing util package and sql package
+
 import java.util.Scanner;
 import java.sql.*;
 
@@ -20,38 +21,50 @@ public class Employee {
             Class.forName("org.postgresql.Driver");
             // establishing database connection
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
+            boolean matchedID = false;
+            HotelRoomManagement hotelRoomManagement = new HotelRoomManagement();
 
-    // log-in method
-    private static int promptForEmployeeId(Connection connection) throws SQLException {
-        Scanner sc = new Scanner(System.in);
-        boolean matchedID = false, isValidEmployee = validateEmployeeId(connection, employeeID);
+            while (!matchedID) {
+                // prompt for the employee ID
+                employeeID = promptForEmployeeId();
 
-        while (!matchedID) {
-            try {
-                System.out.print("Hello! Please log-is first." + "\nEnter Employee ID: ");
-                employeeID = sc.nextInt();
+                // validate employee ID
+                boolean isValidEmployee = validateEmployeeId(connection, employeeID);
 
                 if (isValidEmployee) {
                     // successful log-in
                     System.out.println("Log-in successful.");
-
+                    break;
                     // redirect to hotel room management and table viewing
-                }
-                else {
+
+                } else {
                     // invalid employee ID
-                    System.out.println("Invalid employee ID. Please try again");
+                    System.out.println("Invalid employee ID. Please try again\n");
                 }
             }
-            catch (NumberFormatException e) {
-                System.out.println(e.getMessage());
-            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException ex1) {
+            throw new RuntimeException(ex1);
+        }
+        catch (NumberFormatException ex2) {
+            System.out.println(ex2.getMessage());
+        }
+
+    }
+
+    // log-in method
+    private static int promptForEmployeeId() throws SQLException {
+        Scanner sc = new Scanner(System.in);
+        boolean matchedID = false;
+        try {
+            System.out.print("Hello! Please log-is first." + "\nEnter Employee ID: ");
+            employeeID = sc.nextInt();
+
+        } catch (NumberFormatException e) {
+            System.out.println(e.getMessage());
         }
         return employeeID;
     }
@@ -61,7 +74,7 @@ public class Employee {
         String sql = "SELECT COUNT(*) FROM \"hotelReservationOfficial\".\"hotelSchema\".employees WHERE employeeid = ?";
 
         // create a prepared statement
-        PreparedStatement statement =  connection.prepareStatement(sql);
+        PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, employeedID);
 
         // execute the query and retrieve the result
