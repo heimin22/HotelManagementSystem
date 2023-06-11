@@ -9,7 +9,7 @@ public class HotelRoomManagement {
     private static final String TABLE_ROOM_SERVICES = "room_services";
     private static final String TABLE_USERS = "users";
     private Connection connection;
-    private Scanner sc;
+    private static Scanner sc = new Scanner(System.in);
 
     // url or link for the database
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/hotelReservationOfficial";
@@ -24,11 +24,60 @@ public class HotelRoomManagement {
     }
     public static void main(String[] args) {
 
+
+        boolean exit = false;
+        while (!exit) {
+            displayMenu();
+            int choice = getUserChoice();
+
+            switch (choice) {
+                case 1:
+
+            }
+        }
     }
 
-    private void displayMenu() {
-        System.out.println("------ Menu ------" + "\n1. Display Reserved Rooms" + "\n2. Released Occupied Rooms" + "\n3. Room Service Rooms" + "\n4. Exit");
+    private static void displayMenu() {
+        System.out.println("------ Menu ------" +
+                "\n1. Display Reserved Rooms" +
+                "\n2. Display Customer Records" +
+                "\n3. Display Rooms" +
+                "\n4. Display Room Services" +
+                "\n5. Display Employee List" +
+                "\n6. Display Reservation Records" +
+                "\n7. Exit");
     }
+
+    private static int getUserChoice() {
+        System.out.print("Enter your choice: ");
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return choice;
+    }
+
+    private void displayReservedRooms() {
+
+    }
+
+    private void displayCustomerRecords() {
+
+    }
+
+    private void displayRooms() {
+
+    }
+    private void displayRoomServices() {
+
+    }
+
+    private void displayEmployeeList() {
+
+    }
+
+    private void displayReservedRecords() {
+
+    }
+
 
 
 
