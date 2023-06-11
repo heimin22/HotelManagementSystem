@@ -10,7 +10,7 @@ public class HotelRoomManagement {
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
 
     public static void main(String[] args) {
-
+        System.out.println("");
     }
 
 }

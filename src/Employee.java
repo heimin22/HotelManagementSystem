@@ -45,7 +45,10 @@ public class Employee {
 
                 if (isValidEmployee) {
                     // successful log-in
-                    System.out.println("Log-in successful.");
+                    String employeeName = getEmployeeName(connection, employeeID);
+                    System.out.println("Log-in successful.\n");
+                    System.out.println("Hello " + employeeName + "!");
+                    hotelRoomManagement.main(args);
                     break;
                     // redirect to hotel room management and table viewing
 
@@ -82,13 +85,13 @@ public class Employee {
         return employeeID;
     }
 
-    private static boolean validateEmployeeId(Connection connection, int employeedID) throws SQLException {
+    private static boolean validateEmployeeId(Connection connection, int employeeID) throws SQLException {
         // prepare the SQL statement to validate the employee ID
         String sql = "SELECT COUNT(*) FROM \"hotelReservationOfficial\".\"hotelSchema\".employees WHERE employeeid = ?";
 
         // create a prepared statement
         PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setInt(1, employeedID);
+        statement.setInt(1, employeeID);
 
         // execute the query and retrieve the result
         ResultSet resultSet = statement.executeQuery();
@@ -108,7 +111,7 @@ public class Employee {
     }
 
 
-    // formatting the
+    // formatting the password
     private static String formatPassword(int employeeID) {
         // defining the regex pattern for the employee ID. Example format is "123456" so 6 numbers are allowed
         String regexPattern = "(\\d{6})";
@@ -134,6 +137,30 @@ public class Employee {
             // if the ID did not match the pattern then it will return the original id
             return isString;
         }
+    }
+
+    private static String getEmployeeName(Connection connection, int employeeID) throws SQLException{
+        // preparing the sql statement to find the name that matches according to the ID
+        String sql = "SELECT employeename FROM \"hotelReservationOfficial\".\"hotelSchema\".employees WHERE employeeID = ?";
+
+        // creating a prepared statement
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, employeeID);
+
+        // execute the query and retrieve the result
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        String employeeName = " ";
+        // if any ID matches the corresponding employee name then it will be the employeeName's value
+        if (resultSet.next()) {
+            employeeName = resultSet.getString("employeename");
+        }
+
+        // closing the resultSet and preparedStatement
+        resultSet.close();
+        preparedStatement.close();
+
+        return employeeName;
     }
 }
 
