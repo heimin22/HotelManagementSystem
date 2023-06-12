@@ -131,14 +131,21 @@ public class HotelRoomManagement {
             System.out.println("Reservations are empty.");
         }
 
-        System.out.println("Do you want to add or remove a reservation? (Y/N)");
-        String choice = sc.next();
+        boolean confirmation = false;
 
-        if (choice.equalsIgnoreCase("Y")) {
-            updateReservation(reservationID, userID, roomID, startDate, endDate, reservationDate, reservationPrice, payment);
-        }
-        else if (choice.equalsIgnoreCase("N")) {
-            main(null);
+        while (!confirmation) {
+            System.out.print("Do you want to add or remove a reservation? (Y/N): ");
+            String choice = sc.next();
+
+            if (choice.equalsIgnoreCase("Y")) {
+                updateReservation(reservationID, userID, roomID, startDate, endDate, reservationDate, reservationPrice, payment);
+            }
+            else if (choice.equalsIgnoreCase("N")) {
+                main(null);
+            }
+            else {
+                System.out.println("Please choose the correct input.");
+            }
         }
     }
 
