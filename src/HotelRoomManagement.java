@@ -95,17 +95,36 @@ public class HotelRoomManagement {
     private static void displayReservedRooms() throws SQLException {
         System.out.println("------ Reserved Rooms ------");
 
-        String sql = "SELECT * FROM reservations";
+        try {
+            String sql = "SELECT * FROM reservations";
 
-        Statement statement = connection.createStatement();
+            Statement statement = connection.createStatement();
 
-        ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery(sql);
 
 
-        while (resultSet.next()) {
-            int reservationID = resultSet.getInt("reservationID");
-            int userID = resultSet.getInt("user_ID");
+            while (resultSet.next()) {
+                int reservationID = resultSet.getInt("reservation_id");
+                int userID = resultSet.getInt("user_id");
+                int roomID = resultSet.getInt("room_id");
+                Date startDate = resultSet.getDate("check_in_date");
+                Date endDate = resultSet.getDate("check_out_date");
+                Date reservationDate = resultSet.getDate("reservation_date");
+                int reservationPrice = resultSet.getInt("reservationprice");
+                int payment = resultSet.getInt("payment");
 
+                System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + userID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate + "\nReservation Date: " + reservationDate + "\nReservation Price: " + reservationPrice + "\nAmount Paid: " + payment);
+            }
+
+            resultSet.close();
+            statement.close();
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        catch (NullPointerException ex1) {
+            System.out.println("Reservations are empty.");
         }
     }
 
