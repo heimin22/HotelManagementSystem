@@ -5,15 +5,21 @@ import java.util.Scanner;
 import java.sql.*;
 
 public class HotelRoomManagement {
+    // these are the following database table names. These can be used later if needed
     private static final String TABLE_ROOMS = "rooms";
     private static final String TABLE_EMPLOYEES = "employees";
     private static final String TABLE_RESERVATIONS = "reservations";
     private static final String TABLE_ROOM_MANAGEMENT = "room_management";
     private static final String TABLE_ROOM_SERVICES = "room_services";
     private static final String TABLE_USERS = "users";
+
+    // connection for establishing connection to the database and tables
     private static Connection connection;
+
+    // global scanner
     private static Scanner sc = new Scanner(System.in);
 
+    // this variable is for the choices on what table will be displayed
     private static int choice;
 
     // url or link for the database
@@ -23,29 +29,54 @@ public class HotelRoomManagement {
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
 
-    private static int reservationID, roomID, userID, reservationPrice, payment;
+    // the following variables that represents the int columns in the reservations table
+    private static int reservationID, roomID, userID, reservationPrice, payment, customerUserID;
 
+    // the following variables that represents the date type columns in the reservations table
     private static Date startDate, endDate, reservationDate;
 
+    private static String customerName, phoneNumber;
 
+    private static Timestamp createdAt;
+
+    // constructor for the connection
     public HotelRoomManagement(Connection connection) {
         this.connection = connection;
     }
 
+    // main method
     public static void main(String[] args) throws SQLException {
         System.out.println("\n------ Hotel Room Management ------");
-        boolean exit = false;
 
+        // establishing the connection for the database
         connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
+        // a do-while loop for the choices
         do {
+            // as the user will select the following choice, each cases has an exception handler to handle any exceptions
             try {
+                // displaying the menu
                 displayMenu();
+                // using the choice for calling the getUseChoice method and assigning the value for the variable
                 choice = getUserChoice();
+                // switch case
                 switch (choice) {
                     case 1:
                         try {
                             displayReservedRooms();
+                        }
+                        // a handler if the table doesn't exist
+                        catch (PSQLException e) {
+                            System.out.println("The following table doesn't exist");
+                        }
+                        // a handler for any sql errors
+                        catch (SQLException ex1) {
+                            throw new RuntimeException(ex1);
+                        }
+                        break;
+                    case 2:
+                        try {
+                            displayCustomerRecords();
                         }
                         catch (PSQLException e) {
                             System.out.println("The following table doesn't exist");
@@ -53,9 +84,6 @@ public class HotelRoomManagement {
                         catch (SQLException ex1) {
                             throw new RuntimeException(ex1);
                         }
-                        break;
-                    case 2:
-                        displayCustomerRecords();
                         break;
                     case 3:
                         displayRooms();
@@ -78,6 +106,7 @@ public class HotelRoomManagement {
                         break;
                 }
             }
+            // this handler handles any wrong format exceptions
             catch (InputMismatchException e) {
                 System.out.println("Wrong format entered. Please try again.\n");
                 sc.nextLine();
@@ -159,8 +188,43 @@ public class HotelRoomManagement {
         }
     }
 
-    private static void displayCustomerRecords() {
+    private static void displayCustomerRecords() throws SQLException {
         System.out.println("------ Customer Records ------");
+
+        try {
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".users";
+
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            if (!resultSet.next()) {
+                System.out.println("No reservations found.");
+            }
+            else {
+                while (resultSet.next()) {
+                    reservationID = resultSet.getInt("reservation_id");
+                    userID = resultSet.getInt("user_id");
+                    roomID = resultSet.getInt("room_id");
+                    startDate = resultSet.getDate("check_in_date");
+                    endDate = resultSet.getDate("check_out_date");
+                    reservationDate = resultSet.getDate("reservation_date");
+                    reservationPrice = resultSet.getInt("reservationprice");
+                    payment = resultSet.getInt("payment");
+
+                    System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + userID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate + "\nReservation Date: " + reservationDate + "\nReservation Price: " + reservationPrice + "\nAmount Paid: " + payment);
+                }
+            }
+
+            resultSet.close();
+            statement.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        catch (NullPointerException ex1) {
+            System.out.println("Reservations are empty.");
+        }
     }
 
     private static void displayRooms() {
