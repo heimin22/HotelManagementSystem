@@ -169,7 +169,31 @@ public class HotelRoomManagement {
         System.out.println("------ Reservation Records ------");
     }
 
-    private static void updateReservation(int reservationID, int userID, int roomID, Date startDate, Date endDate, Date reservationDate, int reservationPrice, int payment) {
+    private static void updateReservation(int reservationID, int userID, int roomID, Date newStartDate, Date newEndDate, Date newReservationDate, int newReservationPrice, int newPayment) {
+        try {
+            String sql = "UPDATE reservations SET check_in_date = ?, check_out_date = ?, reservation_date = ?, reservationprice = ?, payment = ? WHERE reservation_id = ?";
 
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setDate(1, new java.sql.Date( newStartDate.getTime()));
+            statement.setDate(2, new java.sql.Date( newEndDate.getTime()));
+            statement.setDate(3, new java.sql.Date( newReservationDate.getTime()));
+            statement.setInt(4, newReservationPrice);
+            statement.setInt(5, newPayment);
+            statement.setInt(6, reservationID);
+
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Reservation updated successfully.");
+            }
+            else {
+                System.out.println("Failed to update reservation");
+            }
+
+            statement.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
