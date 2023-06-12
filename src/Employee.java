@@ -1,4 +1,6 @@
 // importing util package and sql package
+import org.postgresql.util.PSQLException;
+
 import java.util.InputMismatchException;
 import java.util.regex.*;
 import java.util.Scanner;

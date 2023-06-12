@@ -1,3 +1,5 @@
+import org.postgresql.util.PSQLException;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.sql.*;
@@ -30,9 +32,11 @@ public class HotelRoomManagement {
         this.connection = connection;
     }
 
-    public static void main(String[] args) {
-        System.out.println("------ Hotel Room Management ------");
+    public static void main(String[] args) throws SQLException {
+        System.out.println("\n------ Hotel Room Management ------");
         boolean exit = false;
+
+        connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
         do {
             try {
@@ -43,8 +47,11 @@ public class HotelRoomManagement {
                         try {
                             displayReservedRooms();
                         }
-                        catch (SQLException e) {
-                            throw new RuntimeException(e);
+                        catch (PSQLException e) {
+                            System.out.println("The following table doesn't exist");
+                        }
+                        catch (SQLException ex1) {
+                            throw new RuntimeException(ex1);
                         }
                         break;
                     case 2:
@@ -100,29 +107,32 @@ public class HotelRoomManagement {
         System.out.println("------ Reserved Rooms ------");
 
         try {
-            String sql = "SELECT * FROM reservations";
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".reservations";
 
             Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery(sql);
 
+            if (!resultSet.next()) {
+                System.out.println("No reservations found.");
+            }
+            else {
+                while (resultSet.next()) {
+                    reservationID = resultSet.getInt("reservation_id");
+                    userID = resultSet.getInt("user_id");
+                    roomID = resultSet.getInt("room_id");
+                    startDate = resultSet.getDate("check_in_date");
+                    endDate = resultSet.getDate("check_out_date");
+                    reservationDate = resultSet.getDate("reservation_date");
+                    reservationPrice = resultSet.getInt("reservationprice");
+                    payment = resultSet.getInt("payment");
 
-            while (resultSet.next()) {
-                reservationID = resultSet.getInt("reservation_id");
-                userID = resultSet.getInt("user_id");
-                roomID = resultSet.getInt("room_id");
-                startDate = resultSet.getDate("check_in_date");
-                endDate = resultSet.getDate("check_out_date");
-                reservationDate = resultSet.getDate("reservation_date");
-                reservationPrice = resultSet.getInt("reservationprice");
-                payment = resultSet.getInt("payment");
-
-                System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + userID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate + "\nReservation Date: " + reservationDate + "\nReservation Price: " + reservationPrice + "\nAmount Paid: " + payment);
+                    System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + userID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate + "\nReservation Date: " + reservationDate + "\nReservation Price: " + reservationPrice + "\nAmount Paid: " + payment);
+                }
             }
 
             resultSet.close();
             statement.close();
-
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -171,7 +181,7 @@ public class HotelRoomManagement {
 
     private static void updateReservation(int reservationID, int userID, int roomID, Date newStartDate, Date newEndDate, Date newReservationDate, int newReservationPrice, int newPayment) {
         try {
-            String sql = "UPDATE reservations SET check_in_date = ?, check_out_date = ?, reservation_date = ?, reservationprice = ?, payment = ? WHERE reservation_id = ?";
+            String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".reservations SET check_in_date = ?, check_out_date = ?, reservation_date = ?, reservationprice = ?, payment = ? WHERE reservation_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setDate(1, new java.sql.Date( newStartDate.getTime()));
