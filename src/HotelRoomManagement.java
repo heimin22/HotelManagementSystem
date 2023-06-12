@@ -21,6 +21,10 @@ public class HotelRoomManagement {
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
 
+    private static int reservationID, roomID, userID, reservationPrice, payment;
+
+    private static Date startDate, endDate, reservationDate;
+
 
     public HotelRoomManagement(Connection connection) {
         this.connection = connection;
@@ -104,14 +108,14 @@ public class HotelRoomManagement {
 
 
             while (resultSet.next()) {
-                int reservationID = resultSet.getInt("reservation_id");
-                int userID = resultSet.getInt("user_id");
-                int roomID = resultSet.getInt("room_id");
-                Date startDate = resultSet.getDate("check_in_date");
-                Date endDate = resultSet.getDate("check_out_date");
-                Date reservationDate = resultSet.getDate("reservation_date");
-                int reservationPrice = resultSet.getInt("reservationprice");
-                int payment = resultSet.getInt("payment");
+                reservationID = resultSet.getInt("reservation_id");
+                userID = resultSet.getInt("user_id");
+                roomID = resultSet.getInt("room_id");
+                startDate = resultSet.getDate("check_in_date");
+                endDate = resultSet.getDate("check_out_date");
+                reservationDate = resultSet.getDate("reservation_date");
+                reservationPrice = resultSet.getInt("reservationprice");
+                payment = resultSet.getInt("payment");
 
                 System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + userID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate + "\nReservation Date: " + reservationDate + "\nReservation Price: " + reservationPrice + "\nAmount Paid: " + payment);
             }
@@ -125,6 +129,16 @@ public class HotelRoomManagement {
         }
         catch (NullPointerException ex1) {
             System.out.println("Reservations are empty.");
+        }
+
+        System.out.println("Do you want to add or remove a reservation? (Y/N)");
+        String choice = sc.next();
+
+        if (choice.equalsIgnoreCase("Y")) {
+            updateReservation(reservationID, userID, roomID, startDate, endDate, reservationDate, reservationPrice, payment);
+        }
+        else if (choice.equalsIgnoreCase("N")) {
+            main(null);
         }
     }
 
@@ -146,5 +160,9 @@ public class HotelRoomManagement {
 
     private static void displayReservedRecords() {
         System.out.println("------ Reservation Records ------");
+    }
+
+    private static void updateReservation(int reservationID, int userID, int roomID, Date startDate, Date endDate, Date reservationDate, int reservationPrice, int payment) {
+
     }
 }
