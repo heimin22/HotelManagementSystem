@@ -30,17 +30,22 @@ public class HotelRoomManagement {
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
 
-    // the following variables that represents the int columns in the reservations table
+    // the following variables that represents the int columns from the following tables
     private static int reservationID, roomID, userID, customerUserID, serviceID, employeeID, floor, capacity;
+
+    // these variables are used for price columns in the
     private static double reservationPrice, servicePrice, payment;
 
-    // the following variables that represents the date type columns in the reservations table
+    // the following variables that represents the dates about the check-in, check-out, and the reservation date
     private static Date startDate, endDate, reservationDate;
 
+    // these variables are representing the customer's name, service name, names of the employees, their position, and the phone numbers of the customers
     private static String customerName, phoneNumber, roomNumber, roomService, serviceName, employeeName, employeePosition;
 
+    // the timestamp is when the customer user information was created
     private static Timestamp createdAt;
 
+    // this variable is used to confirm if the room is available or not
     private static boolean isAvailable;
 
     // constructor for the connection
@@ -69,11 +74,11 @@ public class HotelRoomManagement {
                         try {
                             displayReservedRooms();
                         }
-                        // a handler if the table doesn't exist
+                        // a handler if the table doesn't exist same as the following cases below
                         catch (PSQLException e) {
                             System.out.println("The following table doesn't exist");
                         }
-                        // a handler for any sql errors
+                        // a handler for any sql errors same as the following cases below too
                         catch (SQLException ex1) {
                             throw new RuntimeException(ex1);
                         }
@@ -147,9 +152,11 @@ public class HotelRoomManagement {
                 System.out.println("Wrong format entered. Please try again.\n");
                 sc.nextLine();
             }
-        } while (choice < 1 || choice > 7);
+        }
+        while (choice < 1 || choice > 7);
     }
 
+    // this method is used for displaying the menu of which table will be displayed
     private static void displayMenu() {
         System.out.println("\n------ Menu ------" +
                 "\n1. Display Reserved Rooms" +
@@ -161,6 +168,7 @@ public class HotelRoomManagement {
                 "\n7. Exit");
     }
 
+    // this method is used for getting the choice of the user of which table they chose to display
     private static int getUserChoice() {
         System.out.print("Enter your choice: ");
         int choice = sc.nextInt();
@@ -168,14 +176,19 @@ public class HotelRoomManagement {
         return choice;
     }
 
+    // this method is used for displaying the reservations table this also handles some exception
     private static void displayReservedRooms() throws SQLException {
         System.out.println("------ Reserved Rooms ------");
 
+        // the following statements below are accessing the data in the reservations table
         try {
+            // preparing an SQL code statement for accessing the table
             String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".reservations";
 
+            // establishing the statement connection
             Statement statement = connection.createStatement();
 
+            // the resultset will be used to execute the following SQL statement to access the following variables
             ResultSet resultSet = statement.executeQuery(sql);
 
             if (!resultSet.next()) {
