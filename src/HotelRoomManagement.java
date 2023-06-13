@@ -203,16 +203,11 @@ public class HotelRoomManagement {
             }
             else {
                 while (resultSet.next()) {
-                    reservationID = resultSet.getInt("reservation_id");
-                    userID = resultSet.getInt("user_id");
-                    roomID = resultSet.getInt("room_id");
-                    startDate = resultSet.getDate("check_in_date");
-                    endDate = resultSet.getDate("check_out_date");
-                    reservationDate = resultSet.getDate("reservation_date");
-                    reservationPrice = resultSet.getInt("reservationprice");
-                    payment = resultSet.getInt("payment");
-
-                    System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + userID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate + "\nReservation Date: " + reservationDate + "\nReservation Price: " + reservationPrice + "\nAmount Paid: " + payment);
+                    customerUserID = resultSet.getInt("customer_user_id");
+                    customerName = resultSet.getString("customer_name");
+                    phoneNumber = resultSet.getString("phone_number");
+                    createdAt = resultSet.getTimestamp("created_at");
+                    System.out.println("Customer ID: " + customerUserID + "\nCustomer Name: " + customerName + "\nPhone Number: " + phoneNumber + "\nCreated At: " + createdAt);
                 }
             }
 
@@ -224,6 +219,23 @@ public class HotelRoomManagement {
         }
         catch (NullPointerException ex1) {
             System.out.println("Reservations are empty.");
+        }
+
+        boolean confirmation = false;
+
+        while (!confirmation) {
+            System.out.print("Do you want to add or remove a customer information? (Y/N): ");
+            String choice = sc.next();
+
+            if (choice.equalsIgnoreCase("Y")) {
+                updateCustomers(customerUserID, customerName, phoneNumber, createdAt);
+            }
+            else if (choice.equalsIgnoreCase("N")) {
+                main(null);
+            }
+            else {
+                System.out.println("Please choose the correct input.");
+            }
         }
     }
 
@@ -265,6 +277,20 @@ public class HotelRoomManagement {
             }
 
             statement.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void updateCustomers(int customerUserID, String newCustomerName, String newPhoneNumber, Timestamp newCreatedAt) {
+        try {
+            String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".users SET customer_name = ?, phone_number = ?, created_at = ? WHERE customer_user_id = ?";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, newCustomerName);
+            statement.setString(2, newPhoneNumber);
+            statement.setTimestamp(3, new java.sql.Timestamp(System.currentTimeMillis()));
         }
         catch (SQLException e) {
             e.printStackTrace();
