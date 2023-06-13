@@ -18,7 +18,7 @@ public class HotelRoomManagement {
     private static Connection connection;
 
     // global scanner
-    private static Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
 
     // this variable is for the choices on what table will be displayed
     private static int choice;
@@ -139,8 +139,8 @@ public class HotelRoomManagement {
                         }
                         break;
                     case 7:
-                        sc.close();
                         System.out.println("Exiting Hotel Room Reservation Management...");
+                        System.exit(0);
                         break;
                     default:
                         System.out.println("Invalid choice. Please try again.\n");
@@ -191,9 +191,11 @@ public class HotelRoomManagement {
             // the resultset will be used to execute the following SQL statement to access the following variables
             ResultSet resultSet = statement.executeQuery(sql);
 
+            // the following statement will be executed if there are no data found inside the table
             if (!resultSet.next()) {
                 System.out.println("No reservations found.");
             }
+            // else the resultset will get the information inside the table and the data will be shown
             else {
                 while (resultSet.next()) {
                     reservationID = resultSet.getInt("reservation_id");
@@ -211,6 +213,7 @@ public class HotelRoomManagement {
                 }
             }
 
+            // closing the resultset and the statement
             resultSet.close();
             statement.close();
         }
@@ -240,9 +243,11 @@ public class HotelRoomManagement {
         }
     }
 
+    // this method is used for displaying the reservations table this also handles some exception
     private static void displayCustomerRecords() throws SQLException {
         System.out.println("------ Customer Records ------");
 
+        // the following statements below are accessing the data in the reservations table
         try {
             String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".users";
 
@@ -599,6 +604,7 @@ public class HotelRoomManagement {
             statement.setInt(4, capacity);
             statement.setString(5, roomService);
             statement.setBoolean(6, newIsAvailable);
+            statement.setInt(7, roomID);
 
             int rowsUpdated = statement.executeUpdate();
 
