@@ -193,6 +193,8 @@ public class HotelRoomManagement {
                     payment = resultSet.getDouble("payment");
 
                     System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + userID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate + "\nReservation Date: " + reservationDate + "\nReservation Price: " + reservationPrice + "\nAmount Paid: " + payment);
+
+                    System.out.println();
                 }
             }
 
@@ -299,6 +301,7 @@ public class HotelRoomManagement {
                     roomService = resultSet.getString("room_service");
                     isAvailable = resultSet.getBoolean("is_available");
                     System.out.println("Room ID: " + roomID + "\nFloor: " + floor + "\nRoom Number: " + roomNumber + "\nCapacity: " + capacity + "\nRoom Service: " + roomService + "Availability: " + isAvailable);
+                    System.out.println();
                 }
             }
 
@@ -405,6 +408,7 @@ public class HotelRoomManagement {
                     employeePosition = resultSet.getString("position");
 
                     System.out.println("Employee ID: " + employeeID + "\nEmployee Name: " + employeeName + "\nPosition: " + employeePosition);
+                    System.out.println();
                 }
             }
 
@@ -459,6 +463,7 @@ public class HotelRoomManagement {
                     endDate = resultSet.getDate("check_out_date");
 
                     System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + customerUserID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate);
+                    System.out.println();
                 }
             }
 
