@@ -178,6 +178,7 @@ public class HotelRoomManagement {
 
             if (choice.equalsIgnoreCase("Y")) {
                 updateReservation(reservationID, userID, roomID, startDate, endDate, reservationDate, reservationPrice, payment);
+                confirmation = true;
             }
             else if (choice.equalsIgnoreCase("N")) {
                 main(null);
@@ -229,6 +230,7 @@ public class HotelRoomManagement {
 
             if (choice.equalsIgnoreCase("Y")) {
                 updateCustomers(customerUserID, customerName, phoneNumber, createdAt);
+                confirmation = true;
             }
             else if (choice.equalsIgnoreCase("N")) {
                 main(null);
@@ -259,10 +261,27 @@ public class HotelRoomManagement {
         try {
             String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".reservations SET check_in_date = ?, check_out_date = ?, reservation_date = ?, reservationprice = ?, payment = ? WHERE reservation_id = ?";
 
+
+
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setDate(1, new java.sql.Date( newStartDate.getTime()));
-            statement.setDate(2, new java.sql.Date( newEndDate.getTime()));
-            statement.setDate(3, new java.sql.Date( newReservationDate.getTime()));
+            if (newStartDate != null) {
+                statement.setDate(1, new java.sql.Date(newStartDate.getTime()));
+            } else {
+                statement.setNull(1, Types.DATE);
+            }
+
+            if (newEndDate != null) {
+                statement.setDate(2, new java.sql.Date(newEndDate.getTime()));
+            } else {
+                statement.setNull(2, Types.DATE);
+            }
+
+            if (newReservationDate != null) {
+                statement.setDate(3, new java.sql.Date(newReservationDate.getTime()));
+            } else {
+                statement.setNull(3, Types.DATE);
+            }
+
             statement.setInt(4, newReservationPrice);
             statement.setInt(5, newPayment);
             statement.setInt(6, reservationID);
@@ -271,15 +290,20 @@ public class HotelRoomManagement {
 
             if (rowsUpdated > 0) {
                 System.out.println("Reservation updated successfully.");
+                main(null);
             }
             else {
-                System.out.println("Failed to update reservation");
+                System.out.println("Failed to update reservation or nothing to be updated");
+                main(null);
             }
 
             statement.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
+        }
+        catch (NullPointerException ex1) {
+            System.out.println("Error: Accessing a certain column for updating failed");
         }
     }
 
@@ -291,6 +315,20 @@ public class HotelRoomManagement {
             statement.setString(1, newCustomerName);
             statement.setString(2, newPhoneNumber);
             statement.setTimestamp(3, new java.sql.Timestamp(System.currentTimeMillis()));
+            statement.setInt(4, customerUserID);
+
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Reservation updated successfully");
+                main(null);
+            }
+            else {
+                System.out.println("Failed to update reservation or nothing to be updated");
+                main(null);
+            }
+
+            statement.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
