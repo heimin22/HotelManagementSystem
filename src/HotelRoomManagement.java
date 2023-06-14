@@ -224,16 +224,19 @@ public class HotelRoomManagement {
             System.out.println("Reservations are empty.");
         }
 
+        // this variables confirms the choice of the user if they want to modify the table or not
         boolean confirmation = false;
 
         while (!confirmation) {
             System.out.print("Do you want to add or remove a reservation? (Y/N): ");
             String choice = sc.next();
 
+            // if yes then the user will be redirected to the corresponding method for updating
             if (choice.equalsIgnoreCase("Y")) {
                 updateReservation(reservationID, userID, roomID, startDate, endDate, reservationDate, reservationPrice, payment);
                 confirmation = true;
             }
+            // if not then the user will be redirected to the main method
             else if (choice.equalsIgnoreCase("N")) {
                 main(null);
             }
