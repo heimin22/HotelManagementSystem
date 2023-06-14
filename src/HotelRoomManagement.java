@@ -420,7 +420,7 @@ public class HotelRoomManagement {
                 System.out.println("Employees are empty.");
             }
             else {
-                while (resultSet.next()) {
+                do {
                     employeeID = resultSet.getInt("employeeid");
                     employeeName = resultSet.getString("employeename");
                     employeePosition = resultSet.getString("position");
@@ -428,6 +428,7 @@ public class HotelRoomManagement {
                     System.out.println("Employee ID: " + employeeID + "\nEmployee Name: " + employeeName + "\nPosition: " + employeePosition);
                     System.out.println();
                 }
+                while (resultSet.next());
             }
 
             statement.close();
@@ -661,6 +662,17 @@ public class HotelRoomManagement {
 
     private static void updateEmployees(int employeeID, String newEmployeeName, String newEmployeePosition) {
         try {
+            System.out.print("\nEnter the employeeID you want to update: ");
+            employeeID = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("Enter the employee name: ");
+            newEmployeeName = sc.nextLine();
+
+            System.out.print("Enter the employee position: ");
+            newEmployeePosition = sc.next();
+            sc.nextLine();
+
             String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".employees SET employeeid = ?, employeename = ?, position = ? WHERE employeeid = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -687,6 +699,9 @@ public class HotelRoomManagement {
         }
         catch (NullPointerException ex1) {
             System.out.println("Error: Accessing a certain column for updating failed");
+        }
+        catch (InputMismatchException ex2) {
+            System.out.println("Error: Please enter the correct format");
         }
     }
 
