@@ -517,6 +517,7 @@ public class HotelRoomManagement {
         }
     }
 
+    // updating methods
     private static void updateReservation(int reservationID, int userID, int roomID, Date newStartDate, Date newEndDate, Date newReservationDate, double newReservationPrice, double newPayment) {
         try {
             System.out.print("Enter the Reservation ID you want to update: ");
