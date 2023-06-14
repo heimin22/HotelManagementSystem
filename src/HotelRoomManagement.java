@@ -1,5 +1,6 @@
 import org.postgresql.util.PSQLException;
 
+import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import javax.swing.plaf.nimbus.State;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -197,7 +198,7 @@ public class HotelRoomManagement {
             }
             // else the resultset will get the information inside the table and the data will be shown
             else {
-                while (resultSet.next()) {
+                do {
                     reservationID = resultSet.getInt("reservation_id");
                     userID = resultSet.getInt("user_id");
                     roomID = resultSet.getInt("room_id");
@@ -211,6 +212,7 @@ public class HotelRoomManagement {
 
                     System.out.println();
                 }
+                while (resultSet.next());
             }
 
             // closing the resultset and the statement
@@ -262,13 +264,14 @@ public class HotelRoomManagement {
                 System.out.println("No customer records found.");
             }
             else {
-                while (resultSet.next()) {
+                do {
                     customerUserID = resultSet.getInt("customer_user_id");
                     customerName = resultSet.getString("customer_name");
                     phoneNumber = resultSet.getString("phone_number");
                     createdAt = resultSet.getTimestamp("created_at");
                     System.out.println("Customer ID: " + customerUserID + "\nCustomer Name: " + customerName + "\nPhone Number: " + phoneNumber + "\nCreated At: " + createdAt);
                 }
+                while (resultSet.next());
             }
 
             resultSet.close();
@@ -314,7 +317,7 @@ public class HotelRoomManagement {
                 System.out.println("Rooms are empty.");
             }
             else {
-                while (resultSet.next()) {
+                do {
                     roomID = resultSet.getInt("room_id");
                     floor = resultSet.getInt("floor");
                     roomNumber = resultSet.getString("room_number");
@@ -324,6 +327,7 @@ public class HotelRoomManagement {
                     System.out.println("Room ID: " + roomID + "\nFloor: " + floor + "\nRoom Number: " + roomNumber + "\nCapacity: " + capacity + "\nRoom Service: " + roomService + "Availability: " + isAvailable);
                     System.out.println();
                 }
+                while (resultSet.next());
             }
 
             statement.close();
@@ -369,7 +373,7 @@ public class HotelRoomManagement {
                 System.out.println("Services are empty.");
             }
             else {
-                while (resultSet.next()) {
+                do {
                     serviceID = resultSet.getInt("service_id");
                     serviceName = resultSet.getString("service_name");
                     servicePrice = resultSet.getDouble("price");
@@ -378,6 +382,7 @@ public class HotelRoomManagement {
                     System.out.println("Service ID: " + serviceID + "\nService Name: " + serviceName + "\nService Price: " + servicePrice + "\nFloor: " + floor);
                     System.out.println();
                 }
+                while (resultSet.next());
             }
 
             statement.close();
@@ -477,7 +482,7 @@ public class HotelRoomManagement {
                 System.out.println("Reserved Records are empty.");
             }
             else {
-                while (resultSet.next()) {
+                do {
                     reservationID = resultSet.getInt("reservation_id");
                     customerUserID = resultSet.getInt("customer_id");
                     roomID = resultSet.getInt("room_id");
@@ -487,6 +492,7 @@ public class HotelRoomManagement {
                     System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + customerUserID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate);
                     System.out.println();
                 }
+                while (resultSet.next());
             }
 
             statement.close();
@@ -568,6 +574,18 @@ public class HotelRoomManagement {
 
     private static void updateCustomers(int customerUserID, String newCustomerName, String newPhoneNumber, Timestamp newCreatedAt) {
         try {
+            System.out.print("Enter the Customer ID you want to update: ");
+            customerUserID = sc.nextInt();
+
+            sc.nextLine();
+
+            System.out.print("Enter the new customer name: ");
+            newCustomerName = sc.nextLine();
+
+            System.out.println("Enter the new phone number: ");
+            newPhoneNumber = sc.next();
+            sc.nextLine();
+
             String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".users SET customer_name = ?, phone_number = ?, created_at = ? WHERE customer_user_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -578,7 +596,21 @@ public class HotelRoomManagement {
 
             int rowsUpdated = statement.executeUpdate();
 
-            if (rowsUpdated > 0) {
+            String updateRoomManagementSQL = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".room_management SET customer_id = ? WHERE customer_id = ?";
+            PreparedStatement updateRoomManagementStatement = connection.prepareStatement(updateRoomManagementSQL);
+            updateRoomManagementStatement.setInt(1, customerUserID);
+            updateRoomManagementStatement.setInt(2, customerUserID);
+
+            int roomManagementUpdated = updateRoomManagementStatement.executeUpdate();
+
+            String updateReservationsSQL = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".reservations SET user_id = ? WHERE user_id = ?";
+            PreparedStatement updateReservationsStatement = connection.prepareStatement(updateReservationsSQL);
+            updateReservationsStatement.setInt(1, customerUserID);
+            updateReservationsStatement.setInt(2, customerUserID);
+
+            int reservationsUpdated = updateReservationsStatement.executeUpdate();
+
+            if (rowsUpdated > 0 && roomManagementUpdated > 0 && reservationsUpdated > 0) {
                 System.out.println("Reservation updated successfully");
                 main(null);
             }
@@ -588,6 +620,8 @@ public class HotelRoomManagement {
             }
 
             statement.close();
+            updateRoomManagementStatement.close();
+            updateReservationsStatement.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -599,6 +633,22 @@ public class HotelRoomManagement {
 
     private static void updateRooms(int roomID, int floor, String roomNumber, int capacity, String roomService, boolean newIsAvailable) throws SQLException {
         try {
+            System.out.print("Enter the Room ID you want to update: ");
+            roomID = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("Enter the new capacity limit: ");
+            capacity = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("Enter the new room service offer: ");
+            roomService = sc.nextLine();
+
+            System.out.println("Is the room available or not (Yes/No): ");
+            String isAvailableStr  = sc.nextLine();
+
+            newIsAvailable = isAvailableStr.equalsIgnoreCase("Yes");
+
             String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".rooms SET room_id = ?, floor = ?, room_number = ?, capacity = ?, room_service = ?, is_available = ? WHERE room_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -612,7 +662,21 @@ public class HotelRoomManagement {
 
             int rowsUpdated = statement.executeUpdate();
 
-            if (rowsUpdated > 0) {
+            String updateRoomManagementSQL = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".room_management SET room_id = ? WHERE room_id = ?";
+            PreparedStatement updateRoomManagementStatement = connection.prepareStatement(updateRoomManagementSQL);
+            updateRoomManagementStatement.setInt(1, roomID);
+            updateRoomManagementStatement.setInt(2, roomID);
+
+            int roomManagementUpdated = updateRoomManagementStatement.executeUpdate();
+
+            String updateReservationsSQL = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".reservations SET room_id = ? WHERE room_id = ?";
+            PreparedStatement updateReservationsStatement = connection.prepareStatement(updateReservationsSQL);
+            updateReservationsStatement.setInt(1, roomID);
+            updateReservationsStatement.setInt(2, roomID);
+
+            int reservationsUpdated = updateReservationsStatement.executeUpdate();
+
+            if (rowsUpdated > 0 && roomManagementUpdated > 0 && reservationsUpdated > 0) {
                 System.out.println("Rooms updated successfully");
                 main(null);
             }
@@ -633,6 +697,19 @@ public class HotelRoomManagement {
 
     private static void updateServices(int serviceID, String newServiceName, double newServicePrice, int newFloor) {
         try {
+            System.out.print("Enter the Service ID you want to update: ");
+            serviceID = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("Enter the new Service Name: ");
+            newServiceName = sc.nextLine();
+
+            System.out.print("Enter the new Service Price: ");
+            newServicePrice = sc.nextDouble();
+
+            System.out.print("Enter the floor with the new updated service: ");
+            newFloor = sc.nextInt();
+
             String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".room_services SET service_id = ?, service_name = ?, price = ?, floor = ? WHERE service_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
