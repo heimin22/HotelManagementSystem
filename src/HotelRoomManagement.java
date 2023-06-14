@@ -667,6 +667,7 @@ public class HotelRoomManagement {
             statement.setInt(1, employeeID);
             statement.setString(2, newEmployeeName);
             statement.setString(3, newEmployeePosition);
+            statement.setInt(4, employeeID);
 
             int rowsUpdated = statement.executeUpdate();
 
@@ -691,7 +692,7 @@ public class HotelRoomManagement {
 
     private static void updateReservedRecords(int reservationID, int customerUserID, int roomID, Date newStartDate, Date newEndDate) {
         try {
-            String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".employees SET reservation_id = ?, customer_id = ?, room_id = ?, check_in_date = ?, check_out_date = ? WHERE reservation_id = ?";
+            String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".room_management SET reservation_id = ?, customer_id = ?, room_id = ?, check_in_date = ?, check_out_date = ? WHERE reservation_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, reservationID);
@@ -709,6 +710,8 @@ public class HotelRoomManagement {
             } else {
                 statement.setNull(5, Types.DATE);
             }
+
+            statement.setInt(6, reservationID);
 
             int rowsUpdated = statement.executeUpdate();
 
