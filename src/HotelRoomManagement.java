@@ -1,20 +1,13 @@
+
 import org.postgresql.util.PSQLException;
 
 import javax.imageio.plugins.jpeg.JPEGImageReadParam;
-import javax.swing.plaf.nimbus.State;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.sql.*;
 
+// main class
 public class HotelRoomManagement {
-    // these are the following database table names. These can be used later if needed
-    private static final String TABLE_ROOMS = "rooms";
-    private static final String TABLE_EMPLOYEES = "employees";
-    private static final String TABLE_RESERVATIONS = "reservations";
-    private static final String TABLE_ROOM_MANAGEMENT = "room_management";
-    private static final String TABLE_ROOM_SERVICES = "room_services";
-    private static final String TABLE_USERS = "users";
-
     // connection for establishing connection to the database and tables
     private static Connection connection;
 
@@ -526,6 +519,22 @@ public class HotelRoomManagement {
 
     private static void updateReservation(int reservationID, int userID, int roomID, Date newStartDate, Date newEndDate, Date newReservationDate, double newReservationPrice, double newPayment) {
         try {
+            System.out.print("Enter the Reservation ID you want to update: ");
+            reservationID = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("Enter the new reservation ID (YYYY-MM-DD): ");
+            String newReservationStr = sc.nextLine();
+            newReservationDate = Date.valueOf(newReservationStr);
+
+            System.out.print("Enter a new reservation price: ");
+            newReservationPrice = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("Enter a new payment by the customer: ");
+            newPayment = sc.nextInt();
+            sc.nextLine();
+
             String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".reservations SET check_in_date = ?, check_out_date = ?, reservation_date = ?, reservationprice = ?, payment = ? WHERE reservation_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -553,7 +562,14 @@ public class HotelRoomManagement {
 
             int rowsUpdated = statement.executeUpdate();
 
-            if (rowsUpdated > 0) {
+            String updateRoomManagementSQL = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".room_management SET check_in_date = ? WHERE reservation_id = ?";
+            PreparedStatement updateRoomManagementStatement = connection.prepareStatement(updateRoomManagementSQL);
+            updateRoomManagementStatement.setDate(1, new java.sql.Date(newReservationDate.getTime()));
+            updateRoomManagementStatement.setDate(1, new java.sql.Date(newReservationDate.getTime()));
+
+            int roomManagementUpdated = updateRoomManagementStatement.executeUpdate();
+
+            if (rowsUpdated > 0 && roomManagementUpdated > 0) {
                 System.out.println("Reservation updated successfully.");
                 main(null);
             }
@@ -787,6 +803,18 @@ public class HotelRoomManagement {
 
     private static void updateReservedRecords(int reservationID, int customerUserID, int roomID, Date newStartDate, Date newEndDate) {
         try {
+            System.out.print("Enter the Reservation ID you want to update: ");
+            reservationID = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("Enter the new check-in date (YYYY-MM-DD): ");
+            String checkInStr = sc.nextLine();
+            newStartDate = Date.valueOf(checkInStr);
+
+            System.out.print("Enter the new check-in date (YYYY-MM-DD): ");
+            String checkOutStr = sc.nextLine();
+            newEndDate = Date.valueOf(checkOutStr);
+
             String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".room_management SET reservation_id = ?, customer_id = ?, room_id = ?, check_in_date = ?, check_out_date = ? WHERE reservation_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -810,7 +838,14 @@ public class HotelRoomManagement {
 
             int rowsUpdated = statement.executeUpdate();
 
-            if (rowsUpdated > 0) {
+            String updateReservationsSQL = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".reservations SET check_in_date = ?, check_out_date = ? WHERE room_id = ?";
+            PreparedStatement updateReservationsStatement = connection.prepareStatement(updateReservationsSQL);
+            updateReservationsStatement.setDate(1, new java.sql.Date(newStartDate.getTime()));
+            updateReservationsStatement.setDate(2, new java.sql.Date(newEndDate.getTime()));
+
+            int reservationsUpdated = updateReservationsStatement.executeUpdate();
+
+            if (rowsUpdated > 0 && reservationsUpdated > 0) {
                 System.out.println("Employees updated successfully");
                 main(null);
             }
