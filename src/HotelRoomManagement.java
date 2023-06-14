@@ -636,6 +636,7 @@ public class HotelRoomManagement {
             statement.setString(2, newServiceName);
             statement.setDouble(3, newServicePrice);
             statement.setInt(4, newFloor);
+            statement.setInt(5, serviceID);
 
             int rowsUpdated = statement.executeUpdate();
 
