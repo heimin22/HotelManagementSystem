@@ -1,7 +1,6 @@
 
 import org.postgresql.util.PSQLException;
 
-import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.sql.*;
