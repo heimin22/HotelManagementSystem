@@ -142,4 +142,12 @@ public class HotelReservation {
             }
         }
     }
+
+    private static void displayServices() {
+
+    }
+
+    private static void searchAvailableRooms() {
+        System.out.println("Available Room Search");
+    }
 }
