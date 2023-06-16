@@ -25,39 +25,56 @@ public class HotelReservation {
     public static void main(String[] args) throws SQLException {
         System.out.println("---Welcome to STI Hotel!---");
 
+        // establishing the connection for the database
         connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
+        // calling the user registration method
         userRegistration();
 
     }
 
+    // generating unique ID method
     private static int generateUniqueUserID () throws SQLException{
         try {
+            // this is the set of the following numbers in a string type
             String existingIDs = "0123456789";
+            // maximum id length is 7
             int idLength = 7;
 
+            // accessing the customer ID
             String sql = "SELECT MAX (customer_user_id) FROM \"hotelReservationOfficial\".\"hotelSchema\".users";
 
+            // establishing the statement connection
             Statement statement = connection.createStatement();
+
+            // // the resultset will be used to execute the following SQL statement to access the following variables
             ResultSet resultSet = statement.executeQuery(sql);
 
+            // 0 is the default value
             int maxUserID = 0;
+            // if there's an available slot for the customer id then the statement below will be executed
             if (resultSet.next()) {
                 maxUserID = resultSet.getInt(1);
             }
 
+            // increment it to 1 to grant the system to generate a unique ID
             int newUserID = maxUserID + 1;
 
             statement.close();
             resultSet.close();
 
+            // creating a StringBuilder object
             StringBuilder sb = new StringBuilder();
+            // random object
             Random random = new Random();
+
+            // generating a unique ID until it reaches the limit
             for (int i = 0; i < idLength; i++) {
                 int index = random.nextInt(existingIDs.length());
                 sb.append(existingIDs.charAt(index));
             }
 
+            // the following unique ID that is an integer before will now be converted into a String
             String uniqueIDString = sb.toString();
             int uniqueID = Integer.parseInt(uniqueIDString);
 
@@ -71,7 +88,6 @@ public class HotelReservation {
     }
 
     private static void userRegistration() throws SQLException {
-        System.out.println("---Welcome to Hotel!---");
 
         boolean userRegistered = false;
 
