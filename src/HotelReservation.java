@@ -1,10 +1,8 @@
-import javax.print.attribute.standard.RequestingUserName;
-import javax.sound.midi.Soundbank;
 import java.util.*;
 import java.sql.*;
 import java.util.regex.*;
 
-
+// main class
 public class HotelReservation {
     private static final Scanner sc = new Scanner(System.in);
     private static String customerName, phoneNumber;
@@ -28,6 +26,8 @@ public class HotelReservation {
         System.out.println("---Welcome to STI Hotel!---");
 
         connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+
+        userRegistration();
 
     }
 
