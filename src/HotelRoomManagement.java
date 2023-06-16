@@ -218,7 +218,7 @@ public class HotelRoomManagement {
             System.out.println("Reservations are empty.");
         }
 
-        // this variables confirms the choice of the user if they want to modify the table or not
+        // these variables confirms the choice of the user if they want to modify the table or not
         boolean confirmation = false;
 
         while (!confirmation) {

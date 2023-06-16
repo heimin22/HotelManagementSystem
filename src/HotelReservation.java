@@ -5,8 +5,8 @@ import java.util.regex.*;
 // main class
 public class HotelReservation {
     private static final Scanner sc = new Scanner(System.in);
-    private static String customerName, phoneNumber;
-    private static int customerID;
+    private static String customerName, phoneNumber, serviceName;
+    private static int customerID, floor;
     private static Timestamp createdAt;
     private static Connection connection;
     // url or link for the database
@@ -149,5 +149,13 @@ public class HotelReservation {
 
     private static void searchAvailableRooms() {
         System.out.println("Available Room Search");
+
+        System.out.print("Enter the preferred service: ");
+        serviceName = sc.nextLine();
+
+        System.out.print("Enter the preferred floor number: ");
+        floor = sc.nextInt();
+
+
     }
 }
