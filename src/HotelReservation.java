@@ -84,9 +84,11 @@ public class HotelReservation {
             e.printStackTrace();
         }
 
+        // return 0 if an error occurs
         return 0;
     }
 
+    // user registration method
     private static void userRegistration() throws SQLException {
 
         boolean userRegistered = false;
@@ -99,10 +101,13 @@ public class HotelReservation {
                 System.out.print("Please enter your phone number: ");
                 phoneNumber = sc.nextLine();
 
+                // generate a unique customer ID
                 customerID = generateUniqueUserID();
 
+                // get the current timestamp as the creation date
                 createdAt = new Timestamp(System.currentTimeMillis());
 
+                // insert the information into the database
                 String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".users (customer_user_id, customer_name, phone_number, created_at)" + "VALUES (?, ?, ?,?)";
 
                 PreparedStatement statement = connection.prepareStatement(sql);
