@@ -26,11 +26,17 @@ public class RoomSearch {
                 int floorNumber = resultSet.getInt("floor_number");
                 String service = resultSet.getString("room_service");
                 boolean occupied = resultSet.getBoolean("is_available");
+                Room room = new Room(roomNumber, floorNumber, occupied, service);
+                rooms.add(room);
             }
             while (resultSet.next());
+            statement.close();
+            resultSet.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
 }
