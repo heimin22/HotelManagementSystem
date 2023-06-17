@@ -6,7 +6,8 @@ import java.util.regex.*;
 public class HotelReservation {
     private static final Scanner sc = new Scanner(System.in);
     private static String customerName, phoneNumber, serviceName;
-    private static int customerID, floor, floorNumber;
+    private static int customerID, floor, floorNumber, serviceID;
+    private static double servicePrice;
     private static Timestamp createdAt;
     private static Connection connection;
     // url or link for the database
@@ -141,7 +142,37 @@ public class HotelReservation {
     }
 
     private static void displayServices() throws SQLException {
+        try {
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".room_services";
 
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            if (!resultSet.next()) {
+                System.out.println("Services are empty.");
+            }
+            else {
+                do {
+                    serviceName = resultSet.getString("service_name");
+                    servicePrice = resultSet.getDouble("price");
+                    floor = resultSet.getInt("floor");
+
+                    System.out.println("Service ID: " + serviceID + "\nService Name: " + serviceName + "\nService Price: " + servicePrice + "\nFloor: " + floor);
+                    System.out.println();
+                }
+                while (resultSet.next());
+            }
+
+            statement.close();
+            resultSet.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        catch (NullPointerException ex1) {
+            System.out.println("Services are empty.");
+        }
     }
 
     private static void searchAvailableRooms() {
