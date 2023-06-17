@@ -187,7 +187,7 @@ public class HotelReservation {
                         System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 55,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym" + "\nGolf Course");
                         break;
                     case 6:
-                        System.out.println("");
+
                     default:
                         System.out.println("Invalid number. Please try again.");
                 }
