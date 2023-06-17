@@ -140,7 +140,7 @@ public class HotelReservation {
         }
     }
 
-    private static void displayServices() {
+    private static void displayServices() throws SQLException {
 
     }
 
