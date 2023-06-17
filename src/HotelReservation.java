@@ -178,38 +178,16 @@ public class HotelReservation {
                         System.out.println("Twin or Double Rooms" + "\nRoom Rate per day: PHP 15,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access");
                         break;
                     case 3:
-                        System.out.println("Studio Rooms");
-                        System.out.println("Room Rate per day: 5,000");
-                        System.out.println("Room Services:");
-                        System.out.println("Laundry");
-                        System.out.println("Buffet");
-                        System.out.println("Swimming pool access");
-                        System.out.println("Mini bar");
+                        System.out.println("Studio Rooms" + "\nRoom Rate per day: PHP 25,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nGym");
                         break;
                     case 4:
-                        System.out.println("Deluxe Rooms");
-                        System.out.println("Room Rate per day: 6,000");
-                        System.out.println("Room Services:");
-                        System.out.println("Laundry");
-                        System.out.println("Buffet");
-                        System.out.println("Swimming pool access");
-                        System.out.println("Mini bar");
-                        System.out.println("Fitness Center");
-                        System.out.println("Spa");
+                        System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 40,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym");
                         break;
                     case 5:
-                        System.out.println("Presidential Suite");
-                        System.out.println("Room Rate per day: 7,000");
-                        System.out.println("Room Services: ");
-                        System.out.println("Laundry");
-                        System.out.println("Buffet");
-                        System.out.println("Swimming pool access");
-                        System.out.println("Mini bar");
-                        System.out.println("Fitness center");
-                        System.out.println("Spa");
-                        System.out.println("Babysitting service");
-                        System.out.println("Medical assistance or on-call Doctor");
+                        System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 55,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym" + "\nGolf Course");
                         break;
+                    case 6:
+                        System.out.println("");
                     default:
                         System.out.println("Invalid number. Please try again.");
                 }
