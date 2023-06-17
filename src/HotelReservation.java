@@ -16,13 +16,10 @@ public class HotelReservation {
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
 
-
     // constructor for the connection
-    public HotelReservation(Connection connection) {
-        this.connection = connection;
-    }
 
     public static void main(String[] args) throws SQLException {
+        RoomSearch roomSearch = new RoomSearch(connection);
         System.out.println("---Welcome to STI Hotel!---");
 
         // establishing the connection for the database
