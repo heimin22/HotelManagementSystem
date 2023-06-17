@@ -49,6 +49,16 @@ public class RoomSearch {
         return availableRooms;
     }
 
+    public List<Room> searchAvailableRooms(String service) {
+        List<Room> availableRooms = new ArrayList<>();
+        for (Room room : rooms) {
+            if (!room.isOccupied() && room.getService().equalsIgnoreCase(service)) {
+                availableRooms.add(room);
+            }
+        }
+        return  availableRooms;
+    }
+
     public List<Room> getAllAvailableRooms() {
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : rooms) {

@@ -6,7 +6,7 @@ import java.util.regex.*;
 public class HotelReservation {
     private static final Scanner sc = new Scanner(System.in);
     private static String customerName, phoneNumber, serviceName;
-    private static int customerID, floor;
+    private static int customerID, floor, floorNumber;
     private static Timestamp createdAt;
     private static Connection connection;
     // url or link for the database
@@ -15,11 +15,11 @@ public class HotelReservation {
     // username (user) and password (master password) of the database
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
+    private static RoomSearch roomSearch = new RoomSearch(connection);
 
     // constructor for the connection
 
     public static void main(String[] args) throws SQLException {
-        RoomSearch roomSearch = new RoomSearch(connection);
         System.out.println("---Welcome to STI Hotel!---");
 
         // establishing the connection for the database
@@ -151,8 +151,35 @@ public class HotelReservation {
         serviceName = sc.nextLine();
 
         System.out.print("Enter the preferred floor number: ");
-        floor = sc.nextInt();
+        floorNumber = sc.nextInt();
 
+        List<Room> availableRooms;
+        if (floorNumber > 0) {
+            availableRooms = roomSearch.searchAvailableRooms(serviceName, floorNumber);
+        }
+        else {
+            availableRooms = roomSearch.searchAvailableRooms(serviceName);
+        }
 
+        if (availableRooms.isEmpty()) {
+            System.out.println("No available rooms found.");
+        }
+        else {
+            System.out.println("Available Rooms: ");
+            for (Room room : availableRooms) {
+                System.out.println(room);
+            }
+        }
+
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+
 }
