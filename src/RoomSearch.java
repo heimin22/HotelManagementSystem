@@ -38,5 +38,50 @@ public class RoomSearch {
         }
     }
 
+    public List<Room> searchAvailableRooms(String service, int floorNumber) {
+        List<Room> availableRooms = new ArrayList<>();
+        for (Room room : rooms) {
+            if (!room.isOccupied() && room.getService().equalsIgnoreCase(service) && room.getFloorNumber() == floorNumber) {
+                availableRooms.add(room);
+            }
+        }
+        return availableRooms;
+    }
 
+    public List<Room> getAllAvailableRooms() {
+        List<Room> availableRooms = new ArrayList<>();
+        for (Room room : rooms) {
+            if (!room.isOccupied()) {
+                availableRooms.add(room);
+            }
+        }
+        return availableRooms;
+    }
+
+    public boolean reserveRoom(int roomNumber, int days, int nights) {
+        Room room = getRoomByNumber(roomNumber);
+        if (room != null && !room.isOccupied()) {
+            room.setOccupied(true);
+            String reservationId = generateReservationID();
+            System.out.println("Reservation successful!" + "\nReservation ID: " + reservationId);
+            return true;
+        }
+        else {
+            System.out.println("Room " + roomNumber + " is not available for reservation.");
+            return false;
+        }
+    }
+
+    private Room getRoomByNumber(int roomNumber) {
+        for (Room room : rooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                return room;
+            }
+        }
+        return null;
+    }
+
+    private String generateReservationID() {
+
+    }
 }
