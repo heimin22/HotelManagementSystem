@@ -1,14 +1,25 @@
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class RoomSearch {
     private List<Room> rooms;
+    // url or link for the database
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/hotelReservationOfficial";
+
+    // username (user) and password (master password) of the database
+    private static final String DB_USERNAME = "postgres";
+    private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
     private static Connection connection;
+
+    static {
+        try {
+            connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public RoomSearch(Connection connection) {
         this.connection = connection;
