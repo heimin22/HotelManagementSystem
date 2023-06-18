@@ -13,18 +13,20 @@ public class RoomSearch {
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
     private static Connection connection;
 
-    static {
-        try {
-            connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public RoomSearch(Connection connection) {
         this.connection = connection;
         rooms = new ArrayList<>();
+        initializeConnection();
         initializeRooms();
+    }
+
+    private void initializeConnection() {
+        try {
+            connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void initializeRooms() {
