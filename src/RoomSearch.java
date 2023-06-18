@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public class RoomSearch {
             LocalDate checkInDate = LocalDate.now();
             LocalDate checkOutDate = checkInDate.plusDays(days + nights);
 
-            BigDecimal roomPrice = BigDecimal.valueOf(calculateRoomPrice(room, days + nights));
+            BigDecimal roomPrice = calculateRoomPrice(room, payment);
             // save reservation to the database
             try {
                 String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".reservations" + "room_id, user_id, check_in_date, check_out_date, reservation_date, reservationprice, payment) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -140,17 +141,29 @@ public class RoomSearch {
         }
     }
 
-    private Double calculateRoomPrice(Room room, BigDecimal payment) {
+    private BigDecimal calculateRoomPrice(Room room, BigDecimal payment) {
         BigDecimal roomPrice = BigDecimal.ZERO;
         String roomType = room.getService();
 
         if (roomType.equalsIgnoreCase("Single Rooms")) {
-            roomPrice = BigDecimal.valueOf(100);
+            roomPrice = BigDecimal.valueOf(8000);
         }
         else if (roomType.equalsIgnoreCase("Twin or Double Rooms")) {
-            roomPrice = BigDecimal.valueOf(150);
+            roomPrice = BigDecimal.valueOf(15000);
+        }
+        else if (roomType.equalsIgnoreCase("Studio Rooms")) {
+            roomPrice = BigDecimal.valueOf(25000);
+        }
+        else if (roomType.equalsIgnoreCase("Deluxe Rooms")) {
+            roomPrice = BigDecimal.valueOf(40000);
+        }
+        else if (roomType.equalsIgnoreCase("Presidential Suite")) {
+            roomPrice = BigDecimal.valueOf(55000);
         }
 
+        BigDecimal numDays = payment.divide(roomPrice, RoundingMode.DOWN);
+
+        return roomPrice.multiply(numDays);
     }
 
     private Room getRoomByNumber(int roomNumber) {
