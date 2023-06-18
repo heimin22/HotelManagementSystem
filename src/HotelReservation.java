@@ -29,6 +29,11 @@ public class HotelReservation {
         // calling the user registration method
         userRegistration();
 
+        displayServices();
+
+        searchAvailableRooms();
+
+
     }
 
     // generating unique ID method
@@ -228,7 +233,6 @@ public class HotelReservation {
                 System.out.println(room);
             }
         }
-
         try {
             if (connection != null) {
                 connection.close();
