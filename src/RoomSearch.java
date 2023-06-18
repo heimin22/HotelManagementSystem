@@ -37,7 +37,7 @@ public class RoomSearch {
 
             while (resultSet.next()) { // Move the cursor to the next row
                 int roomNumber = resultSet.getInt("room_number");
-                int floorNumber = resultSet.getInt("floor_number");
+                int floorNumber = resultSet.getInt("floor");
                 String service = resultSet.getString("room_service");
                 boolean occupied = resultSet.getBoolean("is_available");
                 Room room = new Room(roomNumber, floorNumber, occupied, service);
