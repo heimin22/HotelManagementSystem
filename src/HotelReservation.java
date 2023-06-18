@@ -16,7 +16,7 @@ public class HotelReservation {
     // username (user) and password (master password) of the database
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
-    private static RoomSearch roomSearch = new RoomSearch(connection);
+    private static RoomSearch roomSearch;
 
     // constructor for the connection
 
@@ -25,6 +25,8 @@ public class HotelReservation {
 
         // establishing the connection for the database
         connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+
+        roomSearch = new RoomSearch(connection);
 
         // calling the user registration method
         userRegistration();
