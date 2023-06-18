@@ -1,6 +1,7 @@
 import java.util.*;
 import java.sql.*;
 import java.util.regex.*;
+import java.text.DecimalFormat;
 
 // main class
 public class HotelReservation {
@@ -161,7 +162,8 @@ public class HotelReservation {
             }
             else {
                 do {
-
+                    DecimalFormat decimalFormat = new DecimalFormat("#.00");
+                    String formattedServicePrice = decimalFormat.format(servicePrice);
                     serviceName = resultSet.getString("service_name");
                     servicePrice = resultSet.getDouble("price");
                     floor = resultSet.getInt("floor");
