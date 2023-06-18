@@ -177,25 +177,37 @@ public class HotelReservation {
 
 
             int choice = getUserChoice();
-            while (choice < 1 || choice > 6) {
+            boolean confirmation = false;
+            while (!confirmation) {
                 switch (choice) {
                     case 1:
                         System.out.println("Single Rooms" + "\nRoom Rate per day: PHP 8,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet");
+                        confirmation = true;
+                        getUserChoice();
                         break;
                     case 2:
                         System.out.println("Twin or Double Rooms" + "\nRoom Rate per day: PHP 15,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access");
+                        confirmation = true;
+                        getUserChoice();
                         break;
                     case 3:
                         System.out.println("Studio Rooms" + "\nRoom Rate per day: PHP 25,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nGym");
+                        confirmation = true;
+                        getUserChoice();
                         break;
                     case 4:
                         System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 40,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym");
+                        confirmation = true;
+                        getUserChoice();
                         break;
                     case 5:
                         System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 55,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym" + "\nGolf Course");
+                        confirmation = true;
+                        getUserChoice();
                         break;
                     case 6:
                         searchAvailableRooms();
+                        confirmation = true;
                     default:
                         System.out.println("Invalid input. Please try again.");
                 }
@@ -249,7 +261,7 @@ public class HotelReservation {
     }
 
     private static int getUserChoice() {
-        System.out.print("Select the following number/services to view the details of the service: ");
+        System.out.print("\nSelect the following number/services to view the details of the service or click 6 for available room search: ");
         int choice = sc.nextInt();
         sc.nextLine();
         return choice;
