@@ -1,12 +1,14 @@
 import java.util.*;
 import java.sql.*;
 import java.util.regex.*;
+import java.text.DecimalFormat;
 
 // main class
 public class HotelReservation {
     private static final Scanner sc = new Scanner(System.in);
     private static String customerName, phoneNumber, serviceName;
-    private static int customerID, floor, floorNumber;
+    private static int customerID, floor, floorNumber, serviceID;
+    private static double servicePrice;
     private static Timestamp createdAt;
     private static Connection connection;
     // url or link for the database
@@ -15,7 +17,7 @@ public class HotelReservation {
     // username (user) and password (master password) of the database
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
-    private static RoomSearch roomSearch = new RoomSearch(connection);
+    private static RoomSearch roomSearch;
 
     // constructor for the connection
 
@@ -25,8 +27,15 @@ public class HotelReservation {
         // establishing the connection for the database
         connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
+        roomSearch = new RoomSearch(connection);
+
         // calling the user registration method
         userRegistration();
+
+        displayServices();
+
+        searchAvailableRooms();
+
 
     }
 
@@ -141,7 +150,80 @@ public class HotelReservation {
     }
 
     private static void displayServices() throws SQLException {
+        try {
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".room_services";
 
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            if (!resultSet.next()) {
+                System.out.println("Services are empty.");
+            }
+            else {
+                do {
+                    DecimalFormat decimalFormat = new DecimalFormat("#.00");
+                    String formattedServicePrice = decimalFormat.format(servicePrice);
+                    serviceName = resultSet.getString("service_name");
+                    servicePrice = resultSet.getDouble("price");
+                    floor = resultSet.getInt("floor");
+
+                    System.out.println("\nService Name: " + serviceName + "\nService Price: " + servicePrice + "\nFloor: " + floor);
+                    System.out.println();
+                }
+                while (resultSet.next());
+            }
+
+            statement.close();
+            resultSet.close();
+
+
+            int choice = getUserChoice();
+            boolean confirmation = false;
+            while (!confirmation) {
+                switch (choice) {
+                    case 1:
+                        System.out.println("Single Rooms" + "\nRoom Rate per day: PHP 8,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet");
+                        confirmation = true;
+                        getUserChoice();
+                        break;
+                    case 2:
+                        System.out.println("Twin or Double Rooms" + "\nRoom Rate per day: PHP 15,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access");
+                        confirmation = true;
+                        getUserChoice();
+                        break;
+                    case 3:
+                        System.out.println("Studio Rooms" + "\nRoom Rate per day: PHP 25,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nGym");
+                        confirmation = true;
+                        getUserChoice();
+                        break;
+                    case 4:
+                        System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 40,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym");
+                        confirmation = true;
+                        getUserChoice();
+                        break;
+                    case 5:
+                        System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 55,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym" + "\nGolf Course");
+                        confirmation = true;
+                        getUserChoice();
+                        break;
+                    case 6:
+                        searchAvailableRooms();
+                        confirmation = true;
+                    default:
+                        System.out.println("Invalid input. Please try again.");
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        catch (NullPointerException ex1) {
+            System.out.println("Services are empty.");
+        }
+        catch (InputMismatchException ex2) {
+            System.out.println("Wrong input, please try again");
+        }
     }
 
     private static void searchAvailableRooms() {
@@ -170,7 +252,6 @@ public class HotelReservation {
                 System.out.println(room);
             }
         }
-
         try {
             if (connection != null) {
                 connection.close();
@@ -181,5 +262,10 @@ public class HotelReservation {
         }
     }
 
-
+    private static int getUserChoice() {
+        System.out.print("\nSelect the following number/services to view the details of the service or click 6 for available room search: ");
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return choice;
+    }
 }

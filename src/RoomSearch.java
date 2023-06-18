@@ -1,19 +1,32 @@
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class RoomSearch {
     private List<Room> rooms;
+    // url or link for the database
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/hotelReservationOfficial";
+
+    // username (user) and password (master password) of the database
+    private static final String DB_USERNAME = "postgres";
+    private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
     private static Connection connection;
 
     public RoomSearch(Connection connection) {
         this.connection = connection;
         rooms = new ArrayList<>();
+        initializeConnection();
         initializeRooms();
+    }
+
+    private void initializeConnection() {
+        try {
+            connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void initializeRooms() {
@@ -22,7 +35,7 @@ public class RoomSearch {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
 
-            do {
+            while (resultSet.next()) { // Move the cursor to the next row
                 int roomNumber = resultSet.getInt("room_number");
                 int floorNumber = resultSet.getInt("floor_number");
                 String service = resultSet.getString("room_service");
@@ -30,7 +43,7 @@ public class RoomSearch {
                 Room room = new Room(roomNumber, floorNumber, occupied, service);
                 rooms.add(room);
             }
-            while (resultSet.next());
+
             statement.close();
             resultSet.close();
         }
