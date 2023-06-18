@@ -1,6 +1,9 @@
+import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class RoomSearch {
@@ -36,11 +39,12 @@ public class RoomSearch {
             ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) { // Move the cursor to the next row
+                int roomID = resultSet.getInt("room_id");
                 int roomNumber = resultSet.getInt("room_number");
                 int floorNumber = resultSet.getInt("floor");
                 String service = resultSet.getString("room_service");
                 boolean occupied = resultSet.getBoolean("is_available");
-                Room room = new Room(roomNumber, floorNumber, occupied, service);
+                Room room = new Room(roomID, roomNumber, occupied, service);
                 rooms.add(room);
             }
 
@@ -64,12 +68,26 @@ public class RoomSearch {
 
     public List<Room> searchAvailableRooms(String service) {
         List<Room> availableRooms = new ArrayList<>();
-        for (Room room : rooms) {
-            if (!room.isOccupied() && room.getService().equalsIgnoreCase(service)) {
+        try {
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms " + "WHERE room_service = ?";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,service);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int roomID = resultSet.getInt("room_id");
+                int roomNumber = resultSet.getInt("room_number");
+                boolean occupied = resultSet.getBoolean("is_available");
+                Room room = new Room(roomID, roomNumber, occupied, service);
                 availableRooms.add(room);
             }
         }
-        return  availableRooms;
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return availableRooms;
     }
 
     public List<Room> getAllAvailableRooms() {
@@ -82,18 +100,57 @@ public class RoomSearch {
         return availableRooms;
     }
 
-    public boolean reserveRoom(int roomNumber, int days, int nights) throws SQLException {
+    public boolean reserveRoom(int roomNumber, int days, int nights, int userID, BigDecimal payment) throws SQLException {
         Room room = getRoomByNumber(roomNumber);
         if (room != null && !room.isOccupied()) {
             room.setOccupied(true);
-            int reservationId = generateReservationID();
-            System.out.println("Reservation successful!" + "\nReservation ID: " + reservationId);
+
+            // calculate check-in and check-out dates
+            LocalDate checkInDate = LocalDate.now();
+            LocalDate checkOutDate = checkInDate.plusDays(days + nights);
+
+            BigDecimal roomPrice = BigDecimal.valueOf(calculateRoomPrice(room, days + nights));
+            // save reservation to the database
+            try {
+                String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".reservations" + "room_id, user_id, check_in_date, check_out_date, reservation_date, reservationprice, payment) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setInt(1, room.getRoomID());
+                statement.setInt(2, userID);
+                statement.setDate(3, java.sql.Date.valueOf(checkInDate));
+                statement.setDate(4, java.sql.Date.valueOf(checkOutDate));
+                statement.setTimestamp(5, java.sql.Timestamp.from(java.time.Instant.now()));
+                statement.setBigDecimal(6, roomPrice);
+                statement.setBigDecimal(7, payment);
+
+                statement.executeUpdate();
+                statement.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            int reservationID = generateReservationID();
+            System.out.println("Reservation successful!" + "\nReservation ID: " + reservationID);
             return true;
         }
         else {
             System.out.println("Room " + roomNumber + " is not available for reservation.");
             return false;
         }
+    }
+
+    private Double calculateRoomPrice(Room room, BigDecimal payment) {
+        BigDecimal roomPrice = BigDecimal.ZERO;
+        String roomType = room.getService();
+
+        if (roomType.equalsIgnoreCase("Single Rooms")) {
+            roomPrice = BigDecimal.valueOf(100);
+        }
+        else if (roomType.equalsIgnoreCase("Twin or Double Rooms")) {
+            roomPrice = BigDecimal.valueOf(150);
+        }
+
     }
 
     private Room getRoomByNumber(int roomNumber) {

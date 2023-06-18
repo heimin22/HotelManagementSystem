@@ -1,13 +1,18 @@
 public class Room {
-    private int roomNumber, floorNumber;
+    private int roomNumber, floorNumber, roomID;
     private boolean occupied;
     private String service;
 
-    public Room(int roomNumber, int floorNumber, boolean occupied, String service) {
+    public Room(int roomID, int roomNumber, boolean occupied, String service) {
+        this.roomID = roomID;
         this.roomNumber = roomNumber;
         this.floorNumber = floorNumber;
         this.occupied = occupied;
         this.service = service;
+    }
+
+    public int getRoomID() {
+        return roomID;
     }
 
     public int getRoomNumber() {
