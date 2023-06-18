@@ -177,7 +177,7 @@ public class HotelReservation {
 
 
             int choice = getUserChoice();
-            do {
+            while (choice < 1 || choice > 6) {
                 switch (choice) {
                     case 1:
                         System.out.println("Single Rooms" + "\nRoom Rate per day: PHP 8,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet");
@@ -200,7 +200,6 @@ public class HotelReservation {
                         System.out.println("Invalid input. Please try again.");
                 }
             }
-            while (choice < 1 || choice > 6);
         }
         catch (SQLException e) {
             e.printStackTrace();
