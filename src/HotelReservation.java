@@ -161,11 +161,12 @@ public class HotelReservation {
             }
             else {
                 do {
+
                     serviceName = resultSet.getString("service_name");
                     servicePrice = resultSet.getDouble("price");
                     floor = resultSet.getInt("floor");
 
-                    System.out.println("Service ID: " + serviceID + "\nService Name: " + serviceName + "\nService Price: " + servicePrice + "\nFloor: " + floor);
+                    System.out.println("\nService Name: " + serviceName + "\nService Price: " + servicePrice + "\nFloor: " + floor);
                     System.out.println();
                 }
                 while (resultSet.next());
@@ -194,9 +195,9 @@ public class HotelReservation {
                         System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 55,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym" + "\nGolf Course");
                         break;
                     case 6:
-
+                        searchAvailableRooms();
                     default:
-                        System.out.println("Invalid number. Please try again.");
+                        System.out.println("Invalid input. Please try again.");
                 }
             }
             while (choice < 1 || choice > 6);
@@ -206,6 +207,9 @@ public class HotelReservation {
         }
         catch (NullPointerException ex1) {
             System.out.println("Services are empty.");
+        }
+        catch (InputMismatchException ex2) {
+            System.out.println("Wrong input, please try again");
         }
     }
 

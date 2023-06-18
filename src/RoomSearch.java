@@ -33,7 +33,7 @@ public class RoomSearch {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
 
-            do {
+            while (resultSet.next()) { // Move the cursor to the next row
                 int roomNumber = resultSet.getInt("room_number");
                 int floorNumber = resultSet.getInt("floor_number");
                 String service = resultSet.getString("room_service");
@@ -41,7 +41,7 @@ public class RoomSearch {
                 Room room = new Room(roomNumber, floorNumber, occupied, service);
                 rooms.add(room);
             }
-            while (resultSet.next());
+
             statement.close();
             resultSet.close();
         }
