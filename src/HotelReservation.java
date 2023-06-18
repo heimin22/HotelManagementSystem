@@ -168,8 +168,7 @@ public class HotelReservation {
                     servicePrice = resultSet.getDouble("price");
                     floor = resultSet.getInt("floor");
 
-                    System.out.println("\nService Name: " + serviceName + "\nService Price: " + servicePrice + "\nFloor: " + floor);
-                    System.out.println();
+                    System.out.println("\nService Name: " + serviceName + "\nService Price: " + formattedServicePrice+ "\nFloor: " + floor);
                 }
                 while (resultSet.next());
             }
@@ -227,10 +226,11 @@ public class HotelReservation {
     }
 
     private static void searchAvailableRooms() {
-        System.out.println("Available Room Search");
+        System.out.println("\nAvailable Room Search");
 
         System.out.print("Enter the preferred service: ");
-        serviceName = sc.nextLine();
+        serviceName = sc.next();
+        sc.nextLine();
 
         System.out.print("Enter the preferred floor number: ");
         floorNumber = sc.nextInt();
