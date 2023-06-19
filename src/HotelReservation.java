@@ -260,33 +260,43 @@ public class HotelReservation {
             LocalDate checkInDate = LocalDate.parse(startDate);
             LocalDate checkOutDate = checkInDate.plusDays(days);
 
-            System.out.print("\nAre you sure with the following purchase? (Y/N): ");
-            String confirmation = sc.next();
+            boolean proceed = false;
+            while (!proceed) {
+                System.out.print("\nAre you sure with the following purchase? (Y/N): ");
+                String confirmation = sc.next();
 
-            if (confirmation.equalsIgnoreCase("Y")) {
-                BigDecimal roomPrice = calculateRoomPrice(availableRooms, roomNumber, days);
+                if (confirmation.equalsIgnoreCase("Y")) {
+                    BigDecimal roomPrice = calculateRoomPrice(availableRooms, roomNumber, days);
 
-                System.out.println("\nTotal Price: " + roomPrice);
-                System.out.print("Please enter your payment: ");
-                BigDecimal payment = sc.nextBigDecimal();
+                    System.out.println("\nTotal Price: " + roomPrice);
+                    System.out.print("Please enter your payment: ");
+                    BigDecimal payment = sc.nextBigDecimal();
 
-                BigDecimal change = payment.subtract(roomPrice);
+                    BigDecimal change = payment.subtract(roomPrice);
 
-                System.out.println("Change: " + change);
+                    System.out.println("Change: " + change);
 
-                int userID = getUserID();
-                String userName = getUserName();
-                String phoneNumber = getPhoneNumber();
-                int reservationID = roomSearch.generateReservationID();
-                String serviceReserved = service;
-                int floor = getFloorNumber(roomNumber);
-                checkOutDate = checkInDate.plusDays(days);
-                BigDecimal totalPrice = roomPrice;
-                BigDecimal amountPaid = payment;
+                    int userID = getUserID();
+                    String userName = getUserName();
+                    String phoneNumber = getPhoneNumber();
+                    int reservationID = roomSearch.generateReservationID();
+                    String serviceReserved = service;
+                    int floor = getFloorNumber(roomNumber);
+                    checkOutDate = checkInDate.plusDays(days);
+                    BigDecimal totalPrice = roomPrice;
+                    BigDecimal amountPaid = payment;
 
-                createReceipt(userID, userName, phoneNumber, reservationID, serviceReserved, floor, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
+                    createReceipt(userID, userName, phoneNumber, reservationID, serviceReserved, floor, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
+                    proceed = true;
+                }
+                else if (confirmation.equalsIgnoreCase("N")) {
+                    displayServices();
+                    proceed = true;
+                }
+                else {
+                    System.out.println("Please enter a valid answer.");
+                }
             }
-
         }
         try {
             if (connection != null) {
