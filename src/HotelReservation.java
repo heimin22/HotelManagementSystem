@@ -200,7 +200,7 @@ public class HotelReservation {
                         getUserChoice();
                         break;
                     case 5:
-                        System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 55,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym" + "\nGolf Course");
+                        System.out.println("President Suite" + "\nRoom Rate per day: PHP 55,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym" + "\nGolf Course");
                         confirmation = true;
                         getUserChoice();
                         break;
