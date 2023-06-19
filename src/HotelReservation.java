@@ -2,6 +2,7 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.sql.*;
 import java.util.regex.*;
@@ -324,6 +325,21 @@ public class HotelReservation {
 
             printWriter.println("Reservation Receipt");
             printWriter.println("-------------------");
+            printWriter.println("Reservation ID: " + reservationID);
+            printWriter.println("User ID: " + userID);
+            printWriter.println("User Name: " + userName);
+            printWriter.println("Phone Number: " + phoneNumber);
+            printWriter.println("Service: " + serviceReserved);
+            printWriter.println("Floor Number: " + floor);
+            printWriter.println("Room Number: " + roomNumber);
+            printWriter.println("Check-in Date: " + checkInDate);
+            printWriter.println("Check-out Date: "  + checkOutDate);
+            printWriter.println("Total Price: " + totalPrice);
+            printWriter.println("Amount Paid: " + amountPaid);
+            printWriter.println("Date Created: " + LocalDateTime.now());
+
+            printWriter.close();
+            System.out.println("Receipt created successfully. Please check on the file: " + filename);
         }
         catch (IOException e) {
             throw new RuntimeException(e);
