@@ -72,7 +72,7 @@ public class RoomSearch {
     public List<Room> searchAvailableRooms(String service) {
         List<Room> availableRooms = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms " + "WHERE room_service = ? AND is_available = true";
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms " + "WHERE room_service LIKE ? AND is_available = true";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, "%" + service + " %");
