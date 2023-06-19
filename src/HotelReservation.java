@@ -6,7 +6,7 @@ import java.text.DecimalFormat;
 // main class
 public class HotelReservation {
     private static final Scanner sc = new Scanner(System.in);
-    private static String customerName, phoneNumber, serviceName;
+    private static String customerName, phoneNumber, serviceName, service;
     private static int customerID, floor, floorNumber, serviceID;
     private static double servicePrice;
     private static Timestamp createdAt;
@@ -229,19 +229,10 @@ public class HotelReservation {
         System.out.println("\nAvailable Room Search");
 
         System.out.print("Enter the preferred service: ");
-        serviceName = sc.next();
+        service = sc.next();
         sc.nextLine();
 
-        System.out.print("Enter the preferred floor number: ");
-        floorNumber = sc.nextInt();
-
-        List<Room> availableRooms;
-        if (floorNumber > 0) {
-            availableRooms = roomSearch.searchAvailableRooms(serviceName, floorNumber);
-        }
-        else {
-            availableRooms = roomSearch.searchAvailableRooms(serviceName);
-        }
+        List<Room> availableRooms = roomSearch.searchAvailableRooms(service);
 
         if (availableRooms.isEmpty()) {
             System.out.println("No available rooms found.");
