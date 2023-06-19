@@ -152,9 +152,7 @@ public class HotelReservation {
     private static void displayServices() throws SQLException {
         try {
             String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".room_services";
-
             Statement statement = connection.createStatement();
-
             ResultSet resultSet = statement.executeQuery(sql);
 
             if (!resultSet.next()) {
@@ -163,10 +161,10 @@ public class HotelReservation {
             else {
                 do {
                     DecimalFormat decimalFormat = new DecimalFormat("#.00");
-                    String formattedServicePrice = decimalFormat.format(servicePrice);
                     serviceName = resultSet.getString("service_name");
                     servicePrice = resultSet.getDouble("price");
                     floor = resultSet.getInt("floor");
+                    String formattedServicePrice = decimalFormat.format(servicePrice);
 
                     System.out.println("\nService Name: " + serviceName + "\nService Price: " + formattedServicePrice+ "\nFloor: " + floor);
                 }
