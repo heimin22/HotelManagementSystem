@@ -183,7 +183,7 @@ public class HotelReservation {
             String choice = getUserChoice();
             boolean confirmation = false;
             while (!confirmation) {
-                switch (choice) {
+                switch (choice.toUpperCase()) {
                     case "A" :
                         System.out.println("Single Rooms" + "\nRoom Rate per day: PHP 8,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet");
                         confirmation = true;
