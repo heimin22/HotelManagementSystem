@@ -75,7 +75,7 @@ public class RoomSearch {
             String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms " + "WHERE room_service = ? AND is_available = true";
 
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1,service);
+            statement.setString(1, "%" + service + " %");
 
             ResultSet resultSet = statement.executeQuery();
 
