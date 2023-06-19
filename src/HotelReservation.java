@@ -281,6 +281,7 @@ public class HotelReservation {
                 BigDecimal totalPrice = roomPrice;
                 BigDecimal amountPaid = payment;
 
+                createReceipt(userID, userName, phoneNumber, reservationID, serviceReserved, floor, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
             }
 
         }
