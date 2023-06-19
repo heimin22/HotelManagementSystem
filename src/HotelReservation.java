@@ -1,4 +1,6 @@
+import java.io.*;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.sql.*;
@@ -306,7 +308,26 @@ public class HotelReservation {
     }
 
     private static void createReceipt (int userID, String userName, String phoneNumber, int reservationID, String serviceReserved, int floor, int roomNumber, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalPrice, BigDecimal amountPaid) {
-        int reservations;
+        Timestamp dateCreated = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String stringTimestamp = dateFormat.format(dateCreated);
+        try {
+            String directoryPath = "D:\\Hotel Management System\\Receipts";
+            File directory = new File(directoryPath);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            String filename = directoryPath + "\\" + "receipt_" + reservationID + ".txt";
+            FileWriter fileWriter = new FileWriter(filename);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+
+            printWriter.println("Reservation Receipt");
+            printWriter.println("-------------------");
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static int getUserChoice() {
