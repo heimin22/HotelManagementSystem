@@ -119,7 +119,7 @@ public class RoomSearch {
 
                 // save reservation to the database
                 try {
-                    String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".reservations" + "room_id, user_id, check_in_date, check_out_date, reservation_date, reservationprice, payment) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".reservations (room_id, user_id, check_in_date, check_out_date, reservation_date, reservationprice, payment) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
                     PreparedStatement statement = connection.prepareStatement(sql);
                     statement.setInt(1, room.getRoomID());
                     statement.setInt(2, userID);

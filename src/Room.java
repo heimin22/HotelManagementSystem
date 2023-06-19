@@ -47,7 +47,7 @@ public class Room {
 
     @Override
     public String toString() {
-        String occupiedStatus = occupied ? "Yes" : "No";
+        String occupiedStatus = occupied ? "No" : "Yes";
         return "Room: " + roomNumber + ", Floor: " + floor + ", Occupied: " + occupiedStatus + ", Service: " + service;
     }
 }

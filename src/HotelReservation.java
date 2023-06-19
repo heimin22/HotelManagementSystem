@@ -182,7 +182,7 @@ public class HotelReservation {
 
             String choice = getUserChoice();
             boolean confirmation = false;
-            while (!confirmation) {
+            do {
                 switch (choice.toUpperCase()) {
                     case "A" :
                         System.out.println("Single Rooms" + "\nRoom Rate per day: PHP 8,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet");
@@ -214,8 +214,9 @@ public class HotelReservation {
                         confirmation = true;
                     default:
                         System.out.println("Invalid input. Please try again.");
+                        displayServices();
                 }
-            }
+            } while (!confirmation);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -299,17 +300,20 @@ public class HotelReservation {
 
                         System.out.println("Change: " + change);
 
-                        int userID = getUserID();
-                        String userName = getUserName();
-                        String phoneNumber = getPhoneNumber();
+                        int userID = customerID;
+                        String userName = customerName;
+                        String recPhoneNumber = phoneNumber;
                         int reservationID = roomSearch.generateReservationID();
                         String serviceReserved = service;
-                        int floor = getFloorNumber(roomNumber);
+                        int nights = days - 1;
+                        int floor = getFloorNumber(floorNumber);
                         checkOutDate = checkInDate.plusDays(days);
                         BigDecimal totalPrice = roomPrice;
                         BigDecimal amountPaid = payment;
 
-                        createReceipt(userID, userName, phoneNumber, reservationID, serviceReserved, floor, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
+                        roomSearch.reserveRoom(roomNumber, days, nights, userID, amountPaid);
+
+                        createReceipt(userID, userName, recPhoneNumber, reservationID, serviceReserved, floor, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
                         proceed = true;
                     }
                     else if (confirmation.equalsIgnoreCase("N")) {
@@ -356,7 +360,7 @@ public class HotelReservation {
                 directory.mkdirs();
             }
 
-            String filename = directoryPath + "\\" + "receipt_" + reservationID + ".txt";
+            String filename = directoryPath + File.separator + "receipt_" + stringTimestamp.replace(':', '-') + "_"+ reservationID + ".txt";
             FileWriter fileWriter = new FileWriter(filename);
             PrintWriter printWriter = new PrintWriter(fileWriter);
 
@@ -377,6 +381,7 @@ public class HotelReservation {
 
             printWriter.close();
             System.out.println("Receipt created successfully. Please check on the file: " + filename);
+            System.exit(0);
         }
         catch (IOException e) {
             throw new RuntimeException(e);
@@ -457,25 +462,21 @@ public class HotelReservation {
     }
 
     private static int getFloorNumber(int roomNumber) throws SQLException {
-        int floorNumber = 0;
-        try{
-            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms WHERE room_number = ?";
+            String sql = "SELECT floor FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms WHERE room_number = ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, roomNumber);
+            statement.setString(1, String.valueOf(roomNumber));
 
             ResultSet resultSet = statement.executeQuery();
+            int floorNumberhere = 0;
 
             if (resultSet.next()) {
-                floorNumber = resultSet.getInt("floor");
+                floorNumberhere = resultSet.getInt("floor");
             }
 
             resultSet.close();
             statement.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return floorNumber;
+
+        return floorNumberhere;
     }
 }
