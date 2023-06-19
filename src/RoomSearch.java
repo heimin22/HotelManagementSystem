@@ -134,7 +134,7 @@ public class RoomSearch {
 
                     String updateSQL = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".rooms SET is_available = false WHERE room_number = ?";
                     PreparedStatement updateStatement = connection.prepareStatement(updateSQL);
-                    updateStatement.setInt(1, roomNumber);
+                    updateStatement.setString(1, String.valueOf(roomNumber));
                     updateStatement.executeUpdate();
                     updateStatement.close();
                 } catch (SQLException e) {
