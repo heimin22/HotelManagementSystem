@@ -313,7 +313,7 @@ public class HotelReservation {
 
                         roomSearch.reserveRoom(roomNumber, days, nights, userID, amountPaid);
 
-                        createReceipt(userID, userName, recPhoneNumber, reservationID, serviceReserved, floor, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
+                        createReceipt(userID, userName, recPhoneNumber, reservationID, serviceReserved, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
                         proceed = true;
                     }
                     else if (confirmation.equalsIgnoreCase("N")) {
@@ -349,7 +349,9 @@ public class HotelReservation {
         return BigDecimal.ZERO;
     }
 
-    private static void createReceipt (int userID, String userName, String phoneNumber, int reservationID, String serviceReserved, int floor, int roomNumber, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalPrice, BigDecimal amountPaid) {
+    private static void createReceipt (int userID, String userName, String phoneNumber, int reservationID, String serviceReserved, int roomNumber, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalPrice, BigDecimal amountPaid) throws SQLException {
+        int floorNumber = getFloorNumberByRoomNumber(roomNumber);
+
         Timestamp dateCreated = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String stringTimestamp = dateFormat.format(dateCreated);
@@ -371,7 +373,7 @@ public class HotelReservation {
             printWriter.println("User Name: " + userName);
             printWriter.println("Phone Number: " + phoneNumber);
             printWriter.println("Service: " + serviceReserved);
-            printWriter.println("Floor Number: " + floor);
+            printWriter.println("Floor Number: " + floorNumber);
             printWriter.println("Room Number: " + roomNumber);
             printWriter.println("Check-in Date: " + checkInDate);
             printWriter.println("Check-out Date: "  + checkOutDate);
@@ -478,5 +480,25 @@ public class HotelReservation {
             statement.close();
 
         return floorNumberhere;
+    }
+
+    private static int getFloorNumberByRoomNumber(int roomNumber) throws SQLException {
+        String sql = "SELECT floor FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms WHERE room_number = ?";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, String.valueOf((roomNumber)));
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            int floor = resultSet.getInt("floor");
+            resultSet.close();
+            statement.close();
+            return floor;
+        }
+
+        resultSet.close();
+        statement.close();
+
+        throw new IllegalArgumentException("Room number not found");
     }
 }
