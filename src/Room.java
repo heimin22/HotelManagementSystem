@@ -1,12 +1,12 @@
 public class Room {
-    private int roomNumber, floorNumber, roomID;
+    private int roomNumber, floor, roomID;
     private boolean occupied;
     private String service;
 
-    public Room(int roomID, int roomNumber, boolean occupied, String service) {
+    public Room(int roomID, int roomNumber, boolean occupied, String service, int floor) {
         this.roomID = roomID;
         this.roomNumber = roomNumber;
-        this.floorNumber = floorNumber;
+        this.floor = floor;
         this.occupied = occupied;
         this.service = service;
     }
@@ -19,8 +19,8 @@ public class Room {
         return roomNumber;
     }
 
-    public int getFloorNumber() {
-        return floorNumber;
+    public int getFloor() {
+        return floor;
     }
 
     public boolean isOccupied() {
@@ -37,6 +37,6 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room: " + roomNumber + ", Floor: " + floorNumber + ", Occupied: " + occupied + ", Service: " + service;
+        return "Room: " + roomNumber + ", Floor: " + floor + ", Occupied: " + occupied + ", Service: " + service;
     }
 }

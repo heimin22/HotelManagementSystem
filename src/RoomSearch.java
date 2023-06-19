@@ -4,7 +4,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 public class RoomSearch {
@@ -42,10 +41,10 @@ public class RoomSearch {
             while (resultSet.next()) { // Move the cursor to the next row
                 int roomID = resultSet.getInt("room_id");
                 int roomNumber = resultSet.getInt("room_number");
-                int floorNumber = resultSet.getInt("floor");
+                int floor = resultSet.getInt("floor");
                 String service = resultSet.getString("room_service");
                 boolean occupied = resultSet.getBoolean("is_available");
-                Room room = new Room(roomID, roomNumber, occupied, service);
+                Room room = new Room(roomID, roomNumber, occupied, service, floor);
                 rooms.add(room);
             }
 
@@ -60,7 +59,7 @@ public class RoomSearch {
     public List<Room> searchAvailableRooms(String service, int floorNumber) {
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : rooms) {
-            if (!room.isOccupied() && room.getService().equalsIgnoreCase(service) && room.getFloorNumber() == floorNumber) {
+            if (!room.isOccupied() && room.getService().equalsIgnoreCase(service) && room.getFloor() == floorNumber) {
                 availableRooms.add(room);
             }
         }
@@ -70,7 +69,7 @@ public class RoomSearch {
     public List<Room> searchAvailableRooms(String service) {
         List<Room> availableRooms = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms " + "WHERE room_service = ?";
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms " + "WHERE room_service = ? AND is_available = true";
 
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1,service);
@@ -81,7 +80,8 @@ public class RoomSearch {
                 int roomID = resultSet.getInt("room_id");
                 int roomNumber = resultSet.getInt("room_number");
                 boolean occupied = resultSet.getBoolean("is_available");
-                Room room = new Room(roomID, roomNumber, occupied, service);
+                int floor = resultSet.getInt("floor");
+                Room room = new Room(roomID, roomNumber, occupied, service, floor);
                 availableRooms.add(room);
             }
         }
