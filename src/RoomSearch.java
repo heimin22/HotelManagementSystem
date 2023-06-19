@@ -85,7 +85,7 @@ public class RoomSearch {
                 boolean occupied = resultSet.getBoolean("is_available");
                 String floor = resultSet.getString("floor");
                 BigDecimal price = resultSet.getBigDecimal("price");
-                Room room = new Room(roomID, roomNumber, occupied, service, Integer.parseInt(floor));
+                Room room = new Room(roomID, roomNumber, occupied, service, Integer.parseInt(floor), price);
                 availableRooms.add(room);
             }
         }
@@ -107,37 +107,43 @@ public class RoomSearch {
 
     public boolean reserveRoom(int roomNumber, int days, int nights, int userID, BigDecimal payment) throws SQLException {
         Room room = getRoomByNumber(roomNumber);
-        if (room != null && !room.isOccupied()) {
-            room.setOccupied(true);
+        if (room != null) {
+            List<Room> availableRooms = searchAvailableRooms(room.getService());
+            boolean roomAvailable = availableRooms.stream().anyMatch(r -> r.getRoomNumber() == roomNumber);
+            if (roomAvailable) {
+                room.setOccupied(true);
 
-            // calculate check-in and check-out dates
-            LocalDate checkInDate = LocalDate.now();
-            LocalDate checkOutDate = checkInDate.plusDays(days + nights);
+                // calculate check-in and check-out dates
+                LocalDate checkInDate = LocalDate.now();
+                LocalDate checkOutDate = checkInDate.plusDays(days + nights);
 
-            BigDecimal roomPrice = calculateRoomPrice(room, payment);
-            // save reservation to the database
-            try {
-                String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".reservations" + "room_id, user_id, check_in_date, check_out_date, reservation_date, reservationprice, payment) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-                PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setInt(1, room.getRoomID());
-                statement.setInt(2, userID);
-                statement.setDate(3, java.sql.Date.valueOf(checkInDate));
-                statement.setDate(4, java.sql.Date.valueOf(checkOutDate));
-                statement.setTimestamp(5, java.sql.Timestamp.from(java.time.Instant.now()));
-                statement.setBigDecimal(6, roomPrice);
-                statement.setBigDecimal(7, payment);
+                // save reservation to the database
+                try {
+                    String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".reservations" + "room_id, user_id, check_in_date, check_out_date, reservation_date, reservationprice, payment) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    PreparedStatement statement = connection.prepareStatement(sql);
+                    statement.setInt(1, room.getRoomID());
+                    statement.setInt(2, userID);
+                    statement.setDate(3, java.sql.Date.valueOf(checkInDate));
+                    statement.setDate(4, java.sql.Date.valueOf(checkOutDate));
+                    statement.setTimestamp(5, java.sql.Timestamp.from(java.time.Instant.now()));
+                    statement.setBigDecimal(6, room.getPrice().multiply(BigDecimal.valueOf(days + nights)));
+                    statement.setBigDecimal(7, payment);
 
-                statement.executeUpdate();
-                statement.close();
+                    statement.executeUpdate();
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                int reservationID = generateReservationID();
+                System.out.println("Reservation successful!" + "\nReservation ID: " + reservationID);
+                return true;
             }
-            catch (SQLException e) {
-                e.printStackTrace();
+            else {
+                System.out.println("Room " + roomNumber + " is not available for reservation. ");
                 return false;
             }
-
-            int reservationID = generateReservationID();
-            System.out.println("Reservation successful!" + "\nReservation ID: " + reservationID);
-            return true;
         }
         else {
             System.out.println("Room " + roomNumber + " is not available for reservation.");
