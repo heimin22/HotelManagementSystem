@@ -160,7 +160,7 @@ public class RoomSearch {
         return null;
     }
 
-    private static int generateReservationID() throws SQLException {
+    public static int generateReservationID() throws SQLException {
         try {
         // this is the set of the following numbers in a string type
         String existingIDs = "0123456789";

@@ -225,7 +225,7 @@ public class HotelReservation {
         }
     }
 
-    private static void searchAvailableRooms() {
+    private static void searchAvailableRooms() throws SQLException {
         System.out.println("\nAvailable Room Search");
 
         System.out.print("Enter the preferred service: ");
@@ -271,7 +271,16 @@ public class HotelReservation {
 
                 System.out.println("Change: " + change);
 
-                createReceipt (roomNumber, checkInDate, checkOutDate, roomPrice, payment);
+                int userID = getUserID();
+                String userName = getUserName();
+                String phoneNumber = getPhoneNumber();
+                int reservationID = roomSearch.generateReservationID();
+                String serviceReserved = service;
+                int floor = getFloorNumber(roomNumber);
+                checkOutDate = checkInDate.plusDays(days);
+                BigDecimal totalPrice = roomPrice;
+                BigDecimal amountPaid = payment;
+
             }
 
         }
@@ -295,8 +304,8 @@ public class HotelReservation {
         return BigDecimal.ZERO;
     }
 
-    private static void createReceipt (int roomNumber, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal roomPrice, BigDecimal payment) {
-
+    private static void createReceipt (int userID, String userName, String phoneNumber, int reservationID, String serviceReserved, int floor, int roomNumber, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalPrice, BigDecimal amountPaid) {
+        int reservations;
     }
 
     private static int getUserChoice() {
@@ -304,5 +313,91 @@ public class HotelReservation {
         int choice = sc.nextInt();
         sc.nextLine();
         return choice;
+    }
+
+    private static int getUserID() throws SQLException {
+        int userID = 0;
+        try {
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".users";
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            if (resultSet.next()) {
+                userID = resultSet.getInt("customer_user_id");
+            }
+
+            statement.close();
+            resultSet.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userID;
+    }
+
+    private static String getUserName() throws SQLException {
+        String userName = "";
+        try {
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".users";
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            if (resultSet.next()) {
+                userName = resultSet.getString("customer_name");
+            }
+
+            statement.close();
+            resultSet.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userName;
+    }
+
+    private static String getPhoneNumber() throws SQLException {
+        String phoneNumber = "";
+        try {
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".users";
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            if (resultSet.next()) {
+                phoneNumber = resultSet.getString("phone_number");
+            }
+
+            statement.close();
+            resultSet.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return phoneNumber;
+    }
+
+    private static int getFloorNumber(int roomNumber) throws SQLException {
+        int floorNumber = 0;
+        try{
+            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms WHERE room_number = ?";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, roomNumber);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                floorNumber = resultSet.getInt("floor");
+            }
+
+            resultSet.close();
+            statement.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return floorNumber;
     }
 }
