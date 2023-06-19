@@ -44,7 +44,10 @@ public class RoomSearch {
                 int floor = resultSet.getInt("floor");
                 String service = resultSet.getString("room_service");
                 boolean occupied = resultSet.getBoolean("is_available");
-                Room room = new Room(roomID, roomNumber, occupied, service, floor);
+                BigDecimal price = resultSet.getBigDecimal("price");
+
+
+                Room room = new Room(roomID, roomNumber, occupied, service, floor, price);
                 rooms.add(room);
             }
 
@@ -80,8 +83,9 @@ public class RoomSearch {
                 int roomID = resultSet.getInt("room_id");
                 int roomNumber = resultSet.getInt("room_number");
                 boolean occupied = resultSet.getBoolean("is_available");
-                int floor = resultSet.getInt("floor");
-                Room room = new Room(roomID, roomNumber, occupied, service, floor);
+                String floor = resultSet.getString("floor");
+                BigDecimal price = resultSet.getBigDecimal("price");
+                Room room = new Room(roomID, roomNumber, occupied, service, Integer.parseInt(floor));
                 availableRooms.add(room);
             }
         }
@@ -141,29 +145,14 @@ public class RoomSearch {
         }
     }
 
-    private BigDecimal calculateRoomPrice(Room room, BigDecimal payment) {
-        BigDecimal roomPrice = BigDecimal.ZERO;
-        String roomType = room.getService();
-
-        if (roomType.equalsIgnoreCase("Single Rooms")) {
-            roomPrice = BigDecimal.valueOf(8000);
+    private static BigDecimal calculateRoomPrice(List<Room> availableRooms, int roomNumber, int numDays) {
+        for (Room room : availableRooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                BigDecimal roomPrice = room.getPrice();
+                return roomPrice.multiply(BigDecimal.valueOf(numDays));
+            }
         }
-        else if (roomType.equalsIgnoreCase("Twin or Double Rooms")) {
-            roomPrice = BigDecimal.valueOf(15000);
-        }
-        else if (roomType.equalsIgnoreCase("Studio Rooms")) {
-            roomPrice = BigDecimal.valueOf(25000);
-        }
-        else if (roomType.equalsIgnoreCase("Deluxe Rooms")) {
-            roomPrice = BigDecimal.valueOf(40000);
-        }
-        else if (roomType.equalsIgnoreCase("Presidential Suite")) {
-            roomPrice = BigDecimal.valueOf(55000);
-        }
-
-        BigDecimal numDays = payment.divide(roomPrice, RoundingMode.DOWN);
-
-        return roomPrice.multiply(numDays);
+        return BigDecimal.ZERO;
     }
 
     private Room getRoomByNumber(int roomNumber) {

@@ -1,3 +1,5 @@
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 import java.sql.*;
 import java.util.regex.*;
@@ -240,6 +242,38 @@ public class HotelReservation {
             for (Room room : availableRooms) {
                 System.out.println(room);
             }
+
+            System.out.print("\nSelect the room number you want to reserve: ");
+            int roomNumber = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("How many days do you want to stay: ");
+            int days = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("From (YYYY-MM-DD): ");
+            String startDate = sc.next();
+
+            LocalDate checkInDate = LocalDate.parse(startDate);
+            LocalDate checkOutDate = checkInDate.plusDays(days);
+
+            System.out.print("\nAre you sure with the following purchase? (Y/N): ");
+            String confirmation = sc.next();
+
+            if (confirmation.equalsIgnoreCase("Y")) {
+                BigDecimal roomPrice = calculateRoomPrice(availableRooms, roomNumber, days);
+
+                System.out.println("\nTotal Price: " + roomPrice);
+                System.out.print("Please enter your payment: ");
+                BigDecimal payment = sc.nextBigDecimal();
+
+                BigDecimal change = payment.subtract(roomPrice);
+
+                System.out.println("Change: " + change);
+
+                createReceipt (roomNumber, checkInDate, checkOutDate, roomPrice, payment);
+            }
+
         }
         try {
             if (connection != null) {
@@ -249,6 +283,20 @@ public class HotelReservation {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static BigDecimal calculateRoomPrice(List<Room> availableRooms, int roomNumber, int numDays) {
+        for (Room room : availableRooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                BigDecimal roomPrice = room.getPrice();
+                return roomPrice.multiply(BigDecimal.valueOf(numDays));
+            }
+        }
+        return BigDecimal.ZERO;
+    }
+
+    private static void createReceipt (int roomNumber, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal roomPrice, BigDecimal payment) {
+
     }
 
     private static int getUserChoice() {
