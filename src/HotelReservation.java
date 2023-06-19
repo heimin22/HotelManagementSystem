@@ -32,6 +32,16 @@ public class HotelReservation {
     // constructor for the connection
 
     public static void main(String[] args) throws SQLException {
+        // creating a scheduled executor service
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        // run the checkAndUpdateReservations method every day at 00:00
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nextRun = now.withHour(0).withMinute(0).withSecond(0).plusDays(1);
+        long initialDelay = now.until(nextRun, ChronoUnit.SECONDS);
+        long period = TimeUnit.DAYS.toSeconds(1);
+
+        scheduler.scheduleAtFixedRate(HotelReservation::checkAndUpdateReservations, initialDelay, period, TimeUnit.SECONDS);
         System.out.println("---Welcome to STI Hotel!---");
 
         // establishing the connection for the database
@@ -46,7 +56,7 @@ public class HotelReservation {
 
         searchAvailableRooms();
 
-
+        scheduler.shutdown();
     }
 
     // generating unique ID method
@@ -505,5 +515,39 @@ public class HotelReservation {
         statement.close();
 
         throw new IllegalArgumentException("Room number not found");
+    }
+
+    private static void checkAndUpdateReservations() {
+        try {
+            connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+            String selectSQL = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".reservations";
+            PreparedStatement selectStatement = connection.prepareStatement(selectSQL);
+            ResultSet resultSet = selectStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int reservationID = resultSet.getInt("reservation_id");
+                int roomID = resultSet.getInt("room_id");
+                LocalDate checkOutDate = resultSet.getDate("check_out_date").toLocalDate();
+                boolean isExpired = LocalDate.now().isAfter(checkOutDate);
+
+                if (isExpired) {
+                    // update the is_available field in the rooms table
+                    String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".rooms SET is_available = true WHERE room_id = ? ";
+                    PreparedStatement updateStatement = connection.prepareStatement(sql);
+                    updateStatement.setInt(1, roomID);
+                    updateStatement.executeUpdate();
+                    updateStatement.close();
+
+                    System.out.println("Reservation ID " + reservationID + " has expired. Room " + roomID + " is now available.");
+                }
+
+            }
+
+            resultSet.close();
+            selectStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
