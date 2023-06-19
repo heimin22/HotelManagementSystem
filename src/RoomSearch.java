@@ -151,16 +151,6 @@ public class RoomSearch {
         }
     }
 
-    private static BigDecimal calculateRoomPrice(List<Room> availableRooms, int roomNumber, int numDays) {
-        for (Room room : availableRooms) {
-            if (room.getRoomNumber() == roomNumber) {
-                BigDecimal roomPrice = room.getPrice();
-                return roomPrice.multiply(BigDecimal.valueOf(numDays));
-            }
-        }
-        return BigDecimal.ZERO;
-    }
-
     private Room getRoomByNumber(int roomNumber) {
         for (Room room : rooms) {
             if (room.getRoomNumber() == roomNumber) {
