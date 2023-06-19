@@ -180,36 +180,36 @@ public class HotelReservation {
             resultSet.close();
 
 
-            int choice = getUserChoice();
+            String choice = getUserChoice();
             boolean confirmation = false;
             while (!confirmation) {
                 switch (choice) {
-                    case 1:
+                    case "A" :
                         System.out.println("Single Rooms" + "\nRoom Rate per day: PHP 8,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet");
                         confirmation = true;
                         getUserChoice();
                         break;
-                    case 2:
+                    case "B" :
                         System.out.println("Twin or Double Rooms" + "\nRoom Rate per day: PHP 15,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access");
                         confirmation = true;
                         getUserChoice();
                         break;
-                    case 3:
+                    case "C" :
                         System.out.println("Studio Rooms" + "\nRoom Rate per day: PHP 25,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nGym");
                         confirmation = true;
                         getUserChoice();
                         break;
-                    case 4:
+                    case "D" :
                         System.out.println("Deluxe Rooms" + "\nRoom Rate per day: PHP 40,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym");
                         confirmation = true;
                         getUserChoice();
                         break;
-                    case 5:
+                    case "E" :
                         System.out.println("President Suite" + "\nRoom Rate per day: PHP 55,000.00" + "\nRoom Services: " + "\nLaundry" + "\nBuffet" + "\nSwimming Pool Access" + "\nMini Bar" + "\nSpa" + "\nGym" + "\nGolf Course");
                         confirmation = true;
                         getUserChoice();
                         break;
-                    case 6:
+                    case "F" :
                         searchAvailableRooms();
                         confirmation = true;
                     default:
@@ -233,6 +233,28 @@ public class HotelReservation {
 
         System.out.print("Enter the preferred service: ");
         service = sc.next();
+        switch (service.toUpperCase()) {
+            case "A" :
+                service = "Single Rooms";
+                break;
+            case "B" :
+                service = "Twin or Double Rooms";
+                break;
+            case "C" :
+                service = "Studio Rooms";
+                break;
+            case "D" :
+                service = "Deluxe Rooms";
+                break;
+            case "E" :
+                service = "Presidential Suite";
+                break;
+            case "F" :
+                displayServices();
+                break;
+            default :
+                System.out.println("Please select a valid choice ");
+        }
         sc.nextLine();
 
         List<Room> availableRooms = roomSearch.searchAvailableRooms(service);
@@ -262,39 +284,44 @@ public class HotelReservation {
 
             boolean proceed = false;
             while (!proceed) {
-                System.out.print("\nAre you sure with the following purchase? (Y/N): ");
-                String confirmation = sc.next();
+                try {
+                    System.out.print("\nAre you sure with the following purchase? (Y/N): ");
+                    String confirmation = sc.next();
 
-                if (confirmation.equalsIgnoreCase("Y")) {
-                    BigDecimal roomPrice = calculateRoomPrice(availableRooms, roomNumber, days);
+                    if (confirmation.equalsIgnoreCase("Y")) {
+                        BigDecimal roomPrice = calculateRoomPrice(availableRooms, roomNumber, days);
 
-                    System.out.println("\nTotal Price: " + roomPrice);
-                    System.out.print("Please enter your payment: ");
-                    BigDecimal payment = sc.nextBigDecimal();
+                        System.out.println("\nTotal Price: " + roomPrice);
+                        System.out.print("Please enter your payment: ");
+                        BigDecimal payment = sc.nextBigDecimal();
 
-                    BigDecimal change = payment.subtract(roomPrice);
+                        BigDecimal change = payment.subtract(roomPrice);
 
-                    System.out.println("Change: " + change);
+                        System.out.println("Change: " + change);
 
-                    int userID = getUserID();
-                    String userName = getUserName();
-                    String phoneNumber = getPhoneNumber();
-                    int reservationID = roomSearch.generateReservationID();
-                    String serviceReserved = service;
-                    int floor = getFloorNumber(roomNumber);
-                    checkOutDate = checkInDate.plusDays(days);
-                    BigDecimal totalPrice = roomPrice;
-                    BigDecimal amountPaid = payment;
+                        int userID = getUserID();
+                        String userName = getUserName();
+                        String phoneNumber = getPhoneNumber();
+                        int reservationID = roomSearch.generateReservationID();
+                        String serviceReserved = service;
+                        int floor = getFloorNumber(roomNumber);
+                        checkOutDate = checkInDate.plusDays(days);
+                        BigDecimal totalPrice = roomPrice;
+                        BigDecimal amountPaid = payment;
 
-                    createReceipt(userID, userName, phoneNumber, reservationID, serviceReserved, floor, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
-                    proceed = true;
+                        createReceipt(userID, userName, phoneNumber, reservationID, serviceReserved, floor, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
+                        proceed = true;
+                    }
+                    else if (confirmation.equalsIgnoreCase("N")) {
+                        displayServices();
+                        proceed = true;
+                    }
+                    else {
+                        System.out.println("Please enter a valid answer.");
+                    }
                 }
-                else if (confirmation.equalsIgnoreCase("N")) {
-                    displayServices();
-                    proceed = true;
-                }
-                else {
-                    System.out.println("Please enter a valid answer.");
+                catch (InputMismatchException e) {
+                    System.out.println("Please enter a valid answer");
                 }
             }
         }
@@ -356,12 +383,15 @@ public class HotelReservation {
         }
     }
 
-    private static int getUserChoice() {
-        System.out.print("\nSelect the following number/services to view the details of the service or click 6 for available room search: ");
-        int choice = sc.nextInt();
+    private static String getUserChoice() {
+        System.out.println("\nSelect the following number/services to view the details of the service or click \"F\" for available room search: ");
+        System.out.println("A) Single Rooms\n" + "B) Twin or Double Rooms\n" + "C) Studio Rooms\n" + "D) Deluxe Rooms\n" + "E) Presidential Suite\n" + "F) Available Room Search\n");
+        System.out.print("Response: ");
+        String choice = sc.next();
         sc.nextLine();
         return choice;
     }
+
 
     private static int getUserID() throws SQLException {
         int userID = 0;
