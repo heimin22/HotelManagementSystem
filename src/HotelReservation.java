@@ -247,31 +247,37 @@ public class HotelReservation {
     private static void searchAvailableRooms() throws SQLException {
         System.out.println("\nAvailable Room Search");
 
-        System.out.print("Enter the preferred service: ");
-        service = sc.next();
-        switch (service.toUpperCase()) {
-            case "A" :
-                service = "Single Rooms";
-                break;
-            case "B" :
-                service = "Twin or Double Rooms";
-                break;
-            case "C" :
-                service = "Studio Rooms";
-                break;
-            case "D" :
-                service = "Deluxe Rooms";
-                break;
-            case "E" :
-                service = "Presidential Suite";
-                break;
-            case "F" :
-                displayServices();
-                break;
-            default :
-                System.out.println("Please select a valid choice ");
+        try {
+            System.out.println("Enter the preferred service: " + "A) Single Rooms\n" + "B) Twin or Double Rooms\n" + "C) Studio Rooms\n" + "D) Deluxe Rooms\n" + "E) Presidential Suite\n" + "F) Go back to Display Services\n");
+            System.out.print("Response: ");
+            service = sc.next();
+            switch (service.toUpperCase()) {
+                case "A" :
+                    service = "Single Rooms";
+                    break;
+                case "B" :
+                    service = "Twin or Double Rooms";
+                    break;
+                case "C" :
+                    service = "Studio Rooms";
+                    break;
+                case "D" :
+                    service = "Deluxe Rooms";
+                    break;
+                case "E" :
+                    service = "Presidential Suite";
+                    break;
+                case "F" :
+                    displayServices();
+                    break;
+                default :
+                    System.out.println("Please select a valid choice ");
+            }
+            sc.nextLine();
         }
-        sc.nextLine();
+        catch (InputMismatchException e) {
+            System.out.println("Please enter a valid answer. Try again");
+        }
 
         List<Room> availableRooms = roomSearch.searchAvailableRooms(service);
 
