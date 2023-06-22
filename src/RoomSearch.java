@@ -15,7 +15,6 @@ public class RoomSearch {
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
     private static Connection connection;
-    public static int uniqueID;
 
     public RoomSearch(Connection connection) {
         this.connection = connection;
@@ -209,7 +208,7 @@ public class RoomSearch {
 
         // the following unique ID that is an integer before will now be converted into a String
         String uniqueIDString = sb.toString();
-        uniqueID = Integer.parseInt(uniqueIDString);
+        int uniqueID = Integer.parseInt(uniqueIDString);
 
         return uniqueID;
     }
