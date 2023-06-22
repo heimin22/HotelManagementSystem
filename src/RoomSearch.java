@@ -141,9 +141,7 @@ public class RoomSearch {
                     e.printStackTrace();
                     return false;
                 }
-
-                int reservationID = generateReservationID();
-                System.out.println("Reservation successful!" + "\nReservation ID: " + reservationID);
+                System.out.println("Reservation successful!");
                 return true;
             }
             else {
