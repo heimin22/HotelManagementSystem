@@ -248,7 +248,7 @@ public class HotelReservation {
         System.out.println("\nAvailable Room Search");
 
         try {
-            System.out.println("Enter the preferred service: " + "A) Single Rooms\n" + "B) Twin or Double Rooms\n" + "C) Studio Rooms\n" + "D) Deluxe Rooms\n" + "E) Presidential Suite\n" + "F) Go back to Display Services\n");
+            System.out.println("Enter the preferred service: \n" + "A) Single Rooms\n" + "B) Twin or Double Rooms\n" + "C) Studio Rooms\n" + "D) Deluxe Rooms\n" + "E) Presidential Suite\n" + "F) Go back to Display Services\n");
             System.out.print("Response: ");
             service = sc.next();
             switch (service.toUpperCase()) {

@@ -200,7 +200,6 @@ public class HotelRoomManagement {
                     payment = resultSet.getDouble("payment");
 
                     System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + userID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate + "\nReservation Date: " + reservationDate + "\nReservation Price: " + reservationPrice + "\nAmount Paid: " + payment);
-
                     System.out.println();
                 }
                 while (resultSet.next());
