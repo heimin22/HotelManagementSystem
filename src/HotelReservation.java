@@ -389,7 +389,7 @@ public class HotelReservation {
 
             printWriter.println("Reservation Receipt");
             printWriter.println("-------------------");
-            printWriter.println("Reservation ID: " + reservationID);
+            printWriter.println("Reservation ID: " + roomSearch.generateReservationID());
             printWriter.println("User ID: " + userID);
             printWriter.println("User Name: " + userName);
             printWriter.println("Phone Number: " + phoneNumber);

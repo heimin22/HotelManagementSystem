@@ -15,7 +15,7 @@ public class RoomSearch {
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "Iamthestormthatisapproaching!";
     private static Connection connection;
-    private static int uniqueID;
+    public static int uniqueID;
 
     public RoomSearch(Connection connection) {
         this.connection = connection;
