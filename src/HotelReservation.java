@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
 public class HotelReservation {
     private static final Scanner sc = new Scanner(System.in);
     private static String customerName, phoneNumber, serviceName, service;
-    private static int customerID, floor, floorNumber, serviceID;
+    private static int customerID, floor, floorNumber, serviceID, uniqueID;
     private static double servicePrice;
     private static Timestamp createdAt;
     private static Connection connection;
@@ -57,6 +57,59 @@ public class HotelReservation {
         searchAvailableRooms();
 
         scheduler.shutdown();
+    }
+
+    public static int generateReservationID() throws SQLException {
+        try {
+            // this is the set of the following numbers in a string type
+            String existingIDs = "0123456789";
+            // maximum id length is 4
+            int idLength = 4;
+
+            // accessing the customer ID
+            String sql = "SELECT MAX (room_id) FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms";
+
+            // establishing the statement connection
+            Statement statement = connection.createStatement();
+
+            // // the resultset will be used to execute the following SQL statement to access the following variables
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            // 0 is the default value
+            int maxRoomID = 0;
+            // if there's an available slot for the customer id then the statement below will be executed
+            if (resultSet.next()) {
+                maxRoomID = resultSet.getInt(1);
+            }
+
+            // increment it to 1 to grant the system to generate a unique ID
+            int newUserID = maxRoomID + 1;
+
+            statement.close();
+            resultSet.close();
+
+            // creating a StringBuilder object
+            StringBuilder sb = new StringBuilder();
+            // random object
+            Random random = new Random();
+
+            // generating a unique ID until it reaches the limit
+            for (int i = 0; i < idLength; i++) {
+                int index = random.nextInt(existingIDs.length());
+                sb.append(existingIDs.charAt(index));
+            }
+
+            // the following unique ID that is an integer before will now be converted into a String
+            String uniqueIDString = sb.toString();
+            uniqueID = Integer.parseInt(uniqueIDString);
+
+            return uniqueID;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // return 0 if an error occurs
+        return 0;
     }
 
     // generating unique ID method
