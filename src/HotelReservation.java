@@ -332,7 +332,7 @@ public class HotelReservation {
                         BigDecimal totalPrice = roomPrice;
                         BigDecimal amountPaid = payment;
 
-                        roomSearch.reserveRoom(roomNumber, days, nights, userID, amountPaid);
+                        roomSearch.reserveRoom(roomNumber, days, nights, userID, payment);
 
                         createReceipt(userID, userName, recPhoneNumber, reservationID, serviceReserved, roomNumber, checkInDate, checkOutDate, totalPrice, amountPaid);
                         proceed = true;
