@@ -120,19 +120,21 @@ public class RoomSearch {
 
                 // calculate the reservation price
                 BigDecimal roomPrice = hotelReservation.calculateRoomPrice(availableRooms, roomNumber, days);
-                BigDecimal reservationPrice = roomPrice.multiply(BigDecimal.valueOf(days + nights));
+
+                int reservationID = generateReservationID();
 
                 // save reservation to the database
                 try {
-                    String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".reservations (room_id, user_id, check_in_date, check_out_date, reservation_date, reservationprice, payment) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".reservations (reservation_id, room_id, user_id, check_in_date, check_out_date, reservation_date, reservationprice, payment) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                     PreparedStatement statement = connection.prepareStatement(sql);
-                    statement.setInt(1, generateReservationID());
-                    statement.setInt(2, userID);
-                    statement.setDate(3, java.sql.Date.valueOf(checkInDate));
-                    statement.setDate(4, java.sql.Date.valueOf(checkOutDate));
-                    statement.setTimestamp(5, java.sql.Timestamp.from(java.time.Instant.now()));
-                    statement.setBigDecimal(6, roomPrice);
-                    statement.setBigDecimal(7, payment);
+                    statement.setInt(1, reservationID);
+                    statement.setInt(2, room.getRoomID());
+                    statement.setInt(3, userID);
+                    statement.setDate(4, java.sql.Date.valueOf(checkInDate));
+                    statement.setDate(5, java.sql.Date.valueOf(checkOutDate));
+                    statement.setTimestamp(6, java.sql.Timestamp.from(java.time.Instant.now()));
+                    statement.setBigDecimal(7, roomPrice);
+                    statement.setBigDecimal(8, payment);
 
                     statement.executeUpdate();
                     statement.close();
@@ -213,7 +215,9 @@ public class RoomSearch {
         String uniqueIDString = sb.toString();
         int uniqueID = Integer.parseInt(uniqueIDString);
 
-        return uniqueID;
+        int reservationID = maxRoomID + 1 + uniqueID;
+
+        return reservationID;
     }
         catch (SQLException e) {
         e.printStackTrace();
