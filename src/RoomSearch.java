@@ -215,9 +215,7 @@ public class RoomSearch {
         String uniqueIDString = sb.toString();
         int uniqueID = Integer.parseInt(uniqueIDString);
 
-        int reservationID = maxRoomID + 1 + uniqueID;
-
-        return reservationID;
+        return uniqueID;
     }
         catch (SQLException e) {
         e.printStackTrace();

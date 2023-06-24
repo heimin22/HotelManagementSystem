@@ -318,7 +318,6 @@ public class HotelReservation {
                         BigDecimal payment = sc.nextBigDecimal();
 
                         BigDecimal change = payment.subtract(roomPrice);
-                        int uniqueID = 0;
 
                         System.out.println("Change: " + change);
 
