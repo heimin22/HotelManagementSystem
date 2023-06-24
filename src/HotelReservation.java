@@ -360,7 +360,7 @@ public class HotelReservation {
         }
     }
 
-    private static BigDecimal calculateRoomPrice(List<Room> availableRooms, int roomNumber, int numDays) {
+    public static BigDecimal calculateRoomPrice(List<Room> availableRooms, int roomNumber, int numDays) {
         for (Room room : availableRooms) {
             if (room.getRoomNumber() == roomNumber) {
                 BigDecimal roomPrice = room.getPrice();
@@ -420,69 +420,6 @@ public class HotelReservation {
         return choice;
     }
 
-
-    private static int getUserID() throws SQLException {
-        int userID = 0;
-        try {
-            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".users";
-
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            if (resultSet.next()) {
-                userID = resultSet.getInt("customer_user_id");
-            }
-
-            statement.close();
-            resultSet.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return userID;
-    }
-
-    private static String getUserName() throws SQLException {
-        String userName = "";
-        try {
-            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".users";
-
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            if (resultSet.next()) {
-                userName = resultSet.getString("customer_name");
-            }
-
-            statement.close();
-            resultSet.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return userName;
-    }
-
-    private static String getPhoneNumber() throws SQLException {
-        String phoneNumber = "";
-        try {
-            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".users";
-
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            if (resultSet.next()) {
-                phoneNumber = resultSet.getString("phone_number");
-            }
-
-            statement.close();
-            resultSet.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return phoneNumber;
-    }
 
     private static int getFloorNumber(int roomNumber) throws SQLException {
             String sql = "SELECT floor FROM \"hotelReservationOfficial\".\"hotelSchema\".rooms WHERE room_number = ?";

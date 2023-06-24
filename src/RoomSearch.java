@@ -106,6 +106,7 @@ public class RoomSearch {
     }
 
     public boolean reserveRoom(int roomNumber, int days, int nights, int userID, BigDecimal payment) throws SQLException {
+        HotelReservation hotelReservation = new HotelReservation();
         Room room = getRoomByNumber(roomNumber);
         if (room != null) {
             List<Room> availableRooms = searchAvailableRooms(room.getService());
@@ -117,16 +118,20 @@ public class RoomSearch {
                 LocalDate checkInDate = LocalDate.now();
                 LocalDate checkOutDate = checkInDate.plusDays(days + nights);
 
+                // calculate the reservation price
+                BigDecimal roomPrice = hotelReservation.calculateRoomPrice(availableRooms, roomNumber, days);
+                BigDecimal reservationPrice = roomPrice.multiply(BigDecimal.valueOf(days + nights));
+
                 // save reservation to the database
                 try {
                     String sql = "INSERT INTO \"hotelReservationOfficial\".\"hotelSchema\".reservations (room_id, user_id, check_in_date, check_out_date, reservation_date, reservationprice, payment) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
                     PreparedStatement statement = connection.prepareStatement(sql);
-                    statement.setInt(1, room.getRoomID());
+                    statement.setInt(1, generateReservationID());
                     statement.setInt(2, userID);
                     statement.setDate(3, java.sql.Date.valueOf(checkInDate));
                     statement.setDate(4, java.sql.Date.valueOf(checkOutDate));
                     statement.setTimestamp(5, java.sql.Timestamp.from(java.time.Instant.now()));
-                    statement.setBigDecimal(6, room.getPrice().multiply(BigDecimal.valueOf(days + nights)));
+                    statement.setBigDecimal(6, roomPrice);
                     statement.setBigDecimal(7, payment);
 
                     statement.executeUpdate();
