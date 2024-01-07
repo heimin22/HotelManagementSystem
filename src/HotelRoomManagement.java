@@ -120,17 +120,6 @@ public class HotelRoomManagement {
                         }
                         break;
                     case 6:
-                        try {
-                            displayReservedRecords();
-                        }
-                        catch (PSQLException e) {
-                            System.out.println("The following table doesn't exist");
-                        }
-                        catch (SQLException ex1) {
-                            throw new RuntimeException(ex1);
-                        }
-                        break;
-                    case 7:
                         System.out.println("Exiting Hotel Room Reservation Management...");
                         System.exit(0);
                         break;
@@ -458,62 +447,6 @@ public class HotelRoomManagement {
         }
     }
 
-    private static void displayReservedRecords() throws SQLException {
-        System.out.println("------ Reservation Records ------");
-
-        try {
-            String sql = "SELECT * FROM \"hotelReservationOfficial\".\"hotelSchema\".room_management";
-
-            Statement statement = connection.createStatement();
-
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            if (!resultSet.next()) {
-                System.out.println("Reserved Records are empty.");
-            }
-            else {
-                do {
-                    reservationID = resultSet.getInt("reservation_id");
-                    customerUserID = resultSet.getInt("customer_id");
-                    roomID = resultSet.getInt("room_id");
-                    startDate = resultSet.getDate("check_in_date");
-                    endDate = resultSet.getDate("check_out_date");
-
-                    System.out.println("Reservation ID: " + reservationID + "\nCustomer ID: " + customerUserID + "\nRoom ID: " + roomID + "\nCheck-in Date: " + startDate + "\nCheck-out Date: " + endDate);
-                    System.out.println();
-                }
-                while (resultSet.next());
-            }
-
-            statement.close();
-            resultSet.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        catch (NullPointerException ex1) {
-            System.out.println("Reserved Records are empty.");
-        }
-
-        boolean confirmation = false;
-
-        while (!confirmation) {
-            System.out.print("Do you want to add or remove a customer information? (Y/N): ");
-            String choice = sc.next();
-
-            if (choice.equalsIgnoreCase("Y")) {
-                updateReservedRecords(reservationID, customerUserID, roomID, startDate, endDate);
-                confirmation = true;
-            }
-            else if (choice.equalsIgnoreCase("N")) {
-                main(null);
-            }
-            else {
-                System.out.println("Please choose the correct input.");
-            }
-        }
-    }
-
     // updating methods
     private static void updateReservation(int reservationID, int userID, int roomID, Date newStartDate, Date newEndDate, Date newReservationDate, double newReservationPrice, double newPayment) {
         try {
@@ -796,69 +729,6 @@ public class HotelRoomManagement {
         }
         catch (InputMismatchException ex2) {
             System.out.println("Error: Please enter the correct format");
-        }
-    }
-
-    private static void updateReservedRecords(int reservationID, int customerUserID, int roomID, Date newStartDate, Date newEndDate) {
-        try {
-            System.out.print("Enter the Reservation ID you want to update: ");
-            reservationID = sc.nextInt();
-            sc.nextLine();
-
-            System.out.print("Enter the new check-in date (YYYY-MM-DD): ");
-            String checkInStr = sc.nextLine();
-            newStartDate = Date.valueOf(checkInStr);
-
-            System.out.print("Enter the new check-in date (YYYY-MM-DD): ");
-            String checkOutStr = sc.nextLine();
-            newEndDate = Date.valueOf(checkOutStr);
-
-            String sql = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".room_management SET reservation_id = ?, customer_id = ?, room_id = ?, check_in_date = ?, check_out_date = ? WHERE reservation_id = ?";
-
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, reservationID);
-            statement.setInt(2, customerUserID);
-            statement.setInt(3, roomID);
-
-            if (newStartDate != null) {
-                statement.setDate(4, new java.sql.Date(newStartDate.getTime()));
-            } else {
-                statement.setNull(4, Types.DATE);
-            }
-
-            if (newEndDate != null) {
-                statement.setDate(5, new java.sql.Date(newEndDate.getTime()));
-            } else {
-                statement.setNull(5, Types.DATE);
-            }
-
-            statement.setInt(6, reservationID);
-
-            int rowsUpdated = statement.executeUpdate();
-
-            String updateReservationsSQL = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".reservations SET check_in_date = ?, check_out_date = ? WHERE room_id = ?";
-            PreparedStatement updateReservationsStatement = connection.prepareStatement(updateReservationsSQL);
-            updateReservationsStatement.setDate(1, new java.sql.Date(newStartDate.getTime()));
-            updateReservationsStatement.setDate(2, new java.sql.Date(newEndDate.getTime()));
-
-            int reservationsUpdated = updateReservationsStatement.executeUpdate();
-
-            if (rowsUpdated > 0 && reservationsUpdated > 0) {
-                System.out.println("Employees updated successfully");
-                main(null);
-            }
-            else {
-                System.out.println("Failed to update reservation or nothing to be updated");
-                main(null);
-            }
-
-            statement.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        catch (NullPointerException ex1) {
-            System.out.println("Error: Accessing a certain column for updating failed");
         }
     }
 }
