@@ -208,7 +208,7 @@ public class HotelRoomManagement {
         boolean confirmation = false;
 
         while (!confirmation) {
-            System.out.print("Do you want to add or remove a reservation? (Y/N): ");
+            System.out.print("Do you want to edit a reservation? (Y/N): ");
             String choice = sc.next();
 
             // if yes then the user will be redirected to the corresponding method for updating
@@ -453,7 +453,7 @@ public class HotelRoomManagement {
             reservationID = sc.nextInt();
             sc.nextLine();
 
-            System.out.print("Enter the new reservation ID (YYYY-MM-DD): ");
+            System.out.print("Enter the new date (YYYY-MM-DD): ");
             String newReservationStr = sc.nextLine();
             newReservationDate = Date.valueOf(newReservationStr);
 
@@ -492,14 +492,7 @@ public class HotelRoomManagement {
 
             int rowsUpdated = statement.executeUpdate();
 
-            String updateRoomManagementSQL = "UPDATE \"hotelReservationOfficial\".\"hotelSchema\".room_management SET check_in_date = ? WHERE reservation_id = ?";
-            PreparedStatement updateRoomManagementStatement = connection.prepareStatement(updateRoomManagementSQL);
-            updateRoomManagementStatement.setDate(1, new java.sql.Date(newReservationDate.getTime()));
-            updateRoomManagementStatement.setDate(1, new java.sql.Date(newReservationDate.getTime()));
-
-            int roomManagementUpdated = updateRoomManagementStatement.executeUpdate();
-
-            if (rowsUpdated > 0 && roomManagementUpdated > 0) {
+            if (rowsUpdated > 0) {
                 System.out.println("Reservation updated successfully.");
                 main(null);
             }
