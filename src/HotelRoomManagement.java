@@ -145,8 +145,7 @@ public class HotelRoomManagement {
                 "\n3. Display Rooms" +
                 "\n4. Display Room Services" +
                 "\n5. Display Employee List" +
-                "\n6. Display Reservation Records" +
-                "\n7. Exit");
+                "\n6. Exit");
     }
 
     // this method is used for getting the choice of the user of which table they chose to display
